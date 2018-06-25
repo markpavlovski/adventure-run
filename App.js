@@ -5,7 +5,8 @@ export default class App extends Component {
   state = {
     location: null,
     errorMessage: null,
-    number: 0
+    number: 0,
+    coordinates: []
   }
 
   onMove(){
@@ -18,7 +19,7 @@ export default class App extends Component {
         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
-      this._getLocationAsync();
+      setInterval(this._getLocationAsync,1000)
     }
     setInterval(()=>this.setState({number: Math.random()}), 1000)
   }
@@ -31,13 +32,13 @@ export default class App extends Component {
       });
     }
 
-    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-    this.setState({ location });
-    Location.watchPositionAsync({enableHighAccuracy: true, timeInterval: 500}, location=>{
-      console.log('watchcall');
-      this.setState({ location });
-    })
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+
+
+    this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
+    console.log(location);
   };
+
 
   render() {
     return (
@@ -64,6 +65,15 @@ export default class App extends Component {
           description={'metadata'}
         />
         {
+          this.state.coordinates.length > 1
+          ? <MapView.Polyline
+          		coordinates={this.state.coordinates}
+          		strokeColor="#000"
+          		strokeWidth={6}
+        	  />
+          : null
+        }
+        {
           this.state.location
           ? <MapView.Marker
               coordinate={this.state.location.coords}
@@ -72,6 +82,7 @@ export default class App extends Component {
             />
           : null
         }
+
       </MapView>
 
     );
