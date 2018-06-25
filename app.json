@@ -6,7 +6,10 @@
     "slug": "run",
     "sdkVersion": "27.0.0",
     "ios": {
-      "bundleIdentifier": "com.mrkpvlvski.run"
+      "bundleIdentifier": "com.mrkpvlvski.run",
+      "config": {
+        "googleMapsApiKey": "AIzaSyD3DNZgy3RDiaOT5atbXECyV2FecCDfozg"
+      }
     },
     "android": {
       "package": "com.mrkpvlvski.run"
