@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "Run",
+    "icon": "./icons/icon.png",
+    "version": "1.0.0",
+    "slug": "run",
+    "sdkVersion": "27.0.0",
+    "ios": {
+      "bundleIdentifier": "com.mrkpvlvski.run"
+    },
+    "android": {
+      "package": "com.mrkpvlvski.run"
+    }
+  }
+}
