@@ -1,16 +1,34 @@
 import React, {Component} from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { MapView, Constants, Location, Permissions  } from "expo";
+import { Icon } from 'react-native-elements'
+
 export default class App extends Component {
   state = {
     location: null,
     errorMessage: null,
     number: 0,
-    coordinates: []
-  }
-
-  onMove(){
-    console.log('You moved!')
+    coordinates: [],
+    checkpoints: [
+      {
+        name: '1 - Occidental Square',
+        latitude: 47.600434,
+        longitude: -122.333188,
+        visited: true
+      },
+      {
+        name: '2 - Waterfall Garden Park',
+        latitude: 47.600111,
+        longitude: -122.331692,
+        visited: false
+      },
+      {
+        name: '3 - Zeitgeist',
+        latitude: 47.599129,
+        longitude: -122.331928,
+        visited: false
+      },
+    ]
   }
 
   componentWillMount() {
@@ -36,12 +54,13 @@ export default class App extends Component {
 
 
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
-    console.log(location);
+    // console.log(location);
   };
 
 
   render() {
     return (
+      <View style={{flex:1}}>
       <MapView
         provider='google'
         style={{
@@ -83,8 +102,21 @@ export default class App extends Component {
           : null
         }
 
-      </MapView>
 
+      </MapView>
+      <View style={{flexDirection: 'row', justifyContent: 'space-evenly', padding: 30, borderTopWidth: 2, borderTopColor: '#212121'}}>
+        {this.state.checkpoints.map((checkpoint,idx) =>
+          <Icon
+            key={idx}
+            name={checkpoint.visited ? 'star': 'star'}
+            type='font-awesome'
+            color={checkpoint.visited ? 'gold': '#212121'}
+            onPress={() => console.log(checkpoint.name)}
+          />
+        )}
+
+      </View>
+    </View>
     );
   }
 }
