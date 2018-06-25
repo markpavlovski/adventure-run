@@ -1,9 +1,36 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { MapView } from "expo";
-export default class App extends React.Component {
+import React, {Component} from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
+import { MapView, Constants, Location, Permissions  } from "expo";
+export default class App extends Component {
+  state = {
+    location: null,
+    errorMessage: null,
+  }
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  };
 
   render() {
+    // console.log(this.state.location.coords.latitude);
     return (
       <MapView
         provider='google'
@@ -22,7 +49,7 @@ export default class App extends React.Component {
             latitude: 47.667289,
             longitude: -122.383815
           }}
-          title={'marker.stationName'}
+          title={`${this.state.location ? [this.state.location.coords.latitude.toFixed(4), this.state.location.coords.longitude.toFixed(4)].join(',') : null }`}
           description={'metadata'}
         />
       </MapView>
