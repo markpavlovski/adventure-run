@@ -5,6 +5,11 @@ export default class App extends Component {
   state = {
     location: null,
     errorMessage: null,
+    number: 0
+  }
+
+  onMove(){
+    console.log('You moved!')
   }
 
   componentWillMount() {
@@ -15,6 +20,7 @@ export default class App extends Component {
     } else {
       this._getLocationAsync();
     }
+    setInterval(()=>this.setState({number: Math.random()}), 1000)
   }
 
   _getLocationAsync = async () => {
@@ -25,33 +31,47 @@ export default class App extends Component {
       });
     }
 
-    let location = await Location.getCurrentPositionAsync({});
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
     this.setState({ location });
+    Location.watchPositionAsync({enableHighAccuracy: true, timeInterval: 500}, location=>{
+      console.log('watchcall');
+      this.setState({ location });
+    })
   };
 
   render() {
-    // console.log(this.state.location.coords.latitude);
     return (
       <MapView
         provider='google'
         style={{
           flex: 1
         }}
+        showsUserLocation={true}
         initialRegion={{
-          latitude: 47.667289,
-          longitude: -122.383815,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          latitude: 47.620242,
+          longitude: -122.349848,
+          latitudeDelta: 0.09222,
+          longitudeDelta: 0.1221
         }}
       >
+
         <MapView.Marker
           coordinate={{
             latitude: 47.667289,
             longitude: -122.383815
           }}
-          title={`${this.state.location ? [this.state.location.coords.latitude.toFixed(4), this.state.location.coords.longitude.toFixed(4)].join(',') : null }`}
+          title={`${this.state.number}`}
           description={'metadata'}
         />
+        {
+          this.state.location
+          ? <MapView.Marker
+              coordinate={this.state.location.coords}
+              title={`${this.state.location ? [this.state.location.coords.latitude.toFixed(4), this.state.location.coords.longitude.toFixed(4)].join(',') : null }`}
+              description={'metadata'}
+            />
+          : null
+        }
       </MapView>
 
     );
