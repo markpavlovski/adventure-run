@@ -4,6 +4,7 @@ import { MapView, Constants, Location, Permissions  } from "expo";
 import { Icon } from 'react-native-elements'
 
 export default class App extends Component {
+  DISTANCE_THRESHOLD = 10
   state = {
     location: null,
     errorMessage: null,
@@ -49,7 +50,6 @@ export default class App extends Component {
     } else {
       setInterval(this.getLocationAsync,1000)
     }
-    setInterval(()=>this.setState({number: Math.random()}), 100)
   }
 
   getLocationAsync = async () => {
@@ -61,10 +61,25 @@ export default class App extends Component {
     }
 
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-
-
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
+    this.testCheckpoints()
   }
+
+  testCheckpoints(){
+    const newCheckpoints = this.state.checkpoints.map(checkpoint => {
+      const distance = this.getDistance(checkpoint, this.state.location.coords)
+      if (!checkpoint.visited && distance < this.DISTANCE_THRESHOLD) {
+        checkpoint = {...checkpoint, visited:true}
+      }
+      return checkpoint
+    })
+    this.state.checkpoints
+      .filter((checkpoint, idx) => checkpoint.visited === newCheckpoints[idx].visited)
+      .length
+    ? this.setState({checkpoints: newCheckpoints})
+    : null
+  }
+
 
   getDistance(a,b){
     var R = 6371000; // metres
