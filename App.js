@@ -11,21 +11,31 @@ export default class App extends Component {
     coordinates: [],
     checkpoints: [
       {
-        name: '1 - Occidental Square',
+        name: 'Occidental Square',
+        order: 1,
         latitude: 47.600434,
         longitude: -122.333188,
-        visited: true
+        visited: false
       },
       {
-        name: '2 - Waterfall Garden Park',
+        name: 'Waterfall Garden Park',
+        order: 2,
         latitude: 47.600111,
         longitude: -122.331692,
         visited: false
       },
       {
-        name: '3 - Zeitgeist',
+        name: 'Cafe Zeitgeist',
+        order: 3,
         latitude: 47.599129,
         longitude: -122.331928,
+        visited: false
+      },
+      {
+        name: 'Galvanize',
+        order: 4,
+        latitude: 47.599155,
+        longitude: -122.333778,
         visited: false
       },
     ]
@@ -37,12 +47,12 @@ export default class App extends Component {
         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
-      setInterval(this._getLocationAsync,1000)
+      setInterval(this.getLocationAsync,1000)
     }
-    setInterval(()=>this.setState({number: Math.random()}), 1000)
+    setInterval(()=>this.setState({number: Math.random()}), 100)
   }
 
-  _getLocationAsync = async () => {
+  getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -54,8 +64,23 @@ export default class App extends Component {
 
 
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
-    // console.log(location);
-  };
+  }
+
+  getDistance(a,b){
+    var R = 6371000; // metres
+    var φ1 = a.latitude * (Math.PI / 180);
+    var φ2 = b.latitude * (Math.PI / 180);
+    var Δφ = φ2 - φ1
+    var Δλ = (b.longitude-a.longitude)* (Math.PI / 180);
+
+    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+    var d = R * c;
+    return d
+  }
 
 
   render() {
@@ -68,21 +93,22 @@ export default class App extends Component {
         }}
         showsUserLocation={true}
         initialRegion={{
-          latitude: 47.620242,
-          longitude: -122.349848,
-          latitudeDelta: 0.09222,
-          longitudeDelta: 0.1221
+          latitude: 47.599815,
+          longitude:  -122.331373,
+          latitudeDelta: 0.006222,
+          longitudeDelta: 0.008221
         }}
       >
-
-        <MapView.Marker
-          coordinate={{
-            latitude: 47.667289,
-            longitude: -122.383815
-          }}
-          title={`${this.state.number}`}
-          description={'metadata'}
-        />
+        {
+          this.state.checkpoints.map((checkpoint, idx) =>
+            <MapView.Marker
+              key={idx}
+              coordinate={checkpoint}
+              title={`${checkpoint.name}`}
+              description={`Checkpoint ${checkpoint.order}\n${this.state.location ? this.getDistance(this.state.location.coords,checkpoint).toFixed(0) : 0} meters away`}
+            />
+          )
+        }
         {
           this.state.coordinates.length > 1
           ? <MapView.Polyline
@@ -97,11 +123,10 @@ export default class App extends Component {
           ? <MapView.Marker
               coordinate={this.state.location.coords}
               title={`${this.state.location ? [this.state.location.coords.latitude.toFixed(4), this.state.location.coords.longitude.toFixed(4)].join(',') : null }`}
-              description={'metadata'}
+              description={'This is you!'}
             />
           : null
         }
-
 
       </MapView>
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly', padding: 30, borderTopWidth: 2, borderTopColor: '#212121'}}>
@@ -116,6 +141,13 @@ export default class App extends Component {
         )}
 
       </View>
+      {this.state.location
+        ? <Text style={{textAlign: 'center', paddingBottom: 30}}>
+            {`${this.state.location.coords.latitude.toFixed(4)}, ${this.state.location.coords.longitude.toFixed(4)}`}
+          </Text>
+        : null
+      }
+
     </View>
     );
   }
