@@ -73,11 +73,7 @@ export default class App extends Component {
       }
       return checkpoint
     })
-    this.state.checkpoints
-      .filter((checkpoint, idx) => checkpoint.visited === newCheckpoints[idx].visited)
-      .length
-    ? this.setState({checkpoints: newCheckpoints})
-    : null
+    this.setState({checkpoints: newCheckpoints})
   }
 
 
@@ -156,6 +152,12 @@ export default class App extends Component {
         )}
 
       </View>
+      {this.state.checkpoints && this.state.checkpoints.filter(checkpoint => checkpoint.visited).length === this.state.checkpoints.length
+        ? <Text style={{textAlign: 'center', paddingBottom: 30, fontSize: 20, color: 'gold', fontWeight: 'bold'}}>
+            CONGRATS!
+          </Text>
+        : null
+      }
       {this.state.location
         ? <Text style={{textAlign: 'center', paddingBottom: 30}}>
             {`${this.state.location.coords.latitude.toFixed(4)}, ${this.state.location.coords.longitude.toFixed(4)}`}
