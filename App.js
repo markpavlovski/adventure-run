@@ -7,6 +7,12 @@ export default class App extends Component {
   DISTANCE_THRESHOLD = 10
   state = {
     location: null,
+    region: {
+      latitude: 47.599815,
+      longitude:  -122.331373,
+      latitudeDelta: 0.006222,
+      longitudeDelta: 0.008221
+    },
     errorMessage: null,
     number: 0,
     coordinates: [],
@@ -102,14 +108,15 @@ export default class App extends Component {
         style={{
           flex: 1
         }}
-        showsUserLocation={true}
-        initialRegion={{
-          latitude: 47.599815,
-          longitude:  -122.331373,
-          latitudeDelta: 0.006222,
-          longitudeDelta: 0.008221
+        showsUserLocation
+        showsMyLocationButton
+        initialRegion={this.state.region}
+        ref={ref => { this.mapView = ref }}
+        onRegionChange	= {region => {
+          this.setState({region})
         }}
       >
+        {/* {this.mapView ? console.log(this.state.region) : null} */}
         {
           this.state.checkpoints.map((checkpoint, idx) =>
             <MapView.Marker
@@ -147,7 +154,14 @@ export default class App extends Component {
             name={checkpoint.visited ? 'star': 'star'}
             type='font-awesome'
             color={checkpoint.visited ? 'gold': '#212121'}
-            onPress={() => console.log(checkpoint.name)}
+            onPress={() => {
+              // console.log(checkpoint.name)
+              this.mapView.animateToRegion({
+                ...checkpoint,
+                latitudeDelta: 0.003,
+                longitudeDelta: 0.003
+              }, 500)
+            }}
           />
         )}
 
