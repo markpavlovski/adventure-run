@@ -150,6 +150,7 @@ export default class App extends Component {
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly', padding: 30, borderTopWidth: 2, borderTopColor: '#212121'}}>
         {this.state.checkpoints.map((checkpoint,idx) =>
           <Icon
+            hitSlop={{top: 30, left: 30, bottom: 30, right: 30}}
             key={idx}
             name={checkpoint.visited ? 'star': 'star'}
             type='font-awesome'
