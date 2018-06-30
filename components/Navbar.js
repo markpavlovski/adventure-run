@@ -4,8 +4,8 @@ import { Icon } from 'react-native-elements'
 import NavbarIcon from './NavbarIcon'
 
 const Navbar = props => (
-  <View style={{flexDirection: 'row', justifyContent: 'space-evenly', borderTopWidth: 1, borderTopColor: 'rgb(225,225,225)', minHeight: 50}}>
-    {iconData.map((icon, idx) => <NavbarIcon {...icon} key={idx}/>)}
+  <View style={{flexDirection: 'row', justifyContent: 'space-evenly', borderTopWidth: 1, borderTopColor: 'rgb(225,225,225)', height: 50}}>
+    {iconData.map((icon, idx) => <NavbarIcon {...icon} key={idx} size={20}/>)}
   </View>
 )
 
@@ -25,7 +25,7 @@ const iconData = [
     name:'location-pin',
     type:'simple-line-icon',
     label: 'Start',
-    color: 'rgb(100,100,100)'
+    color: '#378287'
   },
   {
     name:'chart',
