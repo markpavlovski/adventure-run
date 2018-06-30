@@ -3,8 +3,8 @@ import { Platform, StyleSheet, Text, View } from "react-native"
 import { MapView, Constants, Location, Permissions  } from "expo"
 import { Icon } from 'react-native-elements'
 
-import Content from './components/Content'
-import Navbar from './components/Navbar'
+import Content from './src/components/Content'
+import Navbar from './src/components/Navbar'
 
 class App extends Component {
   render = () => (

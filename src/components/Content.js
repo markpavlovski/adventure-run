@@ -109,7 +109,7 @@ export default class Content extends Component {
           flex: 1
         }}
         showsUserLocation
-        showsMyLocationButton
+        // showsMyLocationButton
         initialRegion={this.state.region}
         ref={ref => { this.mapView = ref }}
         onRegionChange	= {region => {

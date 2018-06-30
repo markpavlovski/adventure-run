@@ -22,10 +22,11 @@ const iconData = [
     label: 'Badges',
   },
   {
-    name:'location-pin',
-    type:'simple-line-icon',
+    name:'map-marker',
+    type:'font-awesome',
     label: 'Start',
-    color: '#378287'
+    color: '#378287',
+    size: 60
   },
   {
     name:'chart',
