@@ -1,18 +1,19 @@
 import React, {Component} from "react"
-import { Platform, StyleSheet, Text, View } from "react-native"
-import { MapView, Constants, Location, Permissions  } from "expo"
-import { Icon } from 'react-native-elements'
+import { View } from "react-native"
+import { Provider } from 'react-redux'
 
+import store from './src/store'
 import Content from './src/components/Content'
 import Navbar from './src/components/Navbar'
 
-class App extends Component {
-  render = () => (
+const App = () => (
+  <Provider store={store}>
     <View style={{flex:1}}>
       <Content/>
       <Navbar/>
     </View>
-  )
-}
+  </Provider>
+)
+
 
 export default App
