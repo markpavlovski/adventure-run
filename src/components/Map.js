@@ -1,11 +1,12 @@
-import React, {Component} from "react"
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions } from 'react-native'
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
 
 import TrackMarker from './TrackMarker'
+import ScrollList from './ScrollList'
 
 class Map extends Component {
 
@@ -48,22 +49,27 @@ class Map extends Component {
 
 
   render = () => (
+    <View>
     <MapView
       provider='google'
-      style={{flex: 1}}
+      style={{height: SCREEN_HEIGHT-50, justifyContent: 'flex-end'}}
       showsUserLocation
       // showsMyLocationButton
       initialRegion={this.state.region}
       ref={ref => { this.mapView = ref }}
       onRegionChange	= {region => this.setState({region})}>
-      {
-        tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>
+        {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>)}
 
-        )
-      }
+
+
     </MapView>
+    <ScrollList/>
+  </View>
   )
 }
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 
 const tracks = [
