@@ -1,9 +1,11 @@
 import React, {Component} from "react"
 import {connect} from 'react-redux'
-import { StyleSheet, Text, View } from 'react-native'
-import { MapView, Constants, Location, Permissions  } from 'expo'
+import { Platform, StyleSheet, Text, View } from 'react-native'
+import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
+
+import TrackMarker from './TrackMarker'
 
 class Map extends Component {
 
@@ -13,10 +15,10 @@ class Map extends Component {
     this.state = {
       location: null,
       region: {
-        latitude: 47.599815,
-        longitude:  -122.331373,
-        latitudeDelta: 0.006222,
-        longitudeDelta: 0.008221
+        latitude: 47.681471,
+        longitude: -122.328945,
+        latitudeDelta: 0.06222,
+        longitudeDelta: 0.08221
       },
       errorMessage: null,
     }
@@ -55,12 +57,8 @@ class Map extends Component {
       ref={ref => { this.mapView = ref }}
       onRegionChange	= {region => this.setState({region})}>
       {
-        tracks.map((track, idx) =>
-          <MapView.Marker
-            key={idx}
-            coordinate={track}
-            title={`${track.name}`}
-            description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}/>
+        tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>
+
         )
       }
     </MapView>
