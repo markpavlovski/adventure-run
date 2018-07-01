@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux'
-import { Platform, StyleSheet, Text, View } from "react-native"
+import { Platform, StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 
 import NavbarIcon from './NavbarIcon'
@@ -10,8 +10,15 @@ import {changeActivePage} from '../actions'
 
 
 const Navbar = props => (
-  <View style={{flexDirection: 'row', justifyContent: 'space-evenly', borderTopWidth: 1, borderTopColor: 'rgb(225,225,225)', height: 50}}>
-    {iconData.map((icon, idx) => <NavbarIcon {...icon} key={idx} size={20} onPress={()=>props.changeActivePage(icon.id)} hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}/>)}
+  <View style={styles.navbar}>
+    {iconData.map((icon, idx) =>
+      <NavbarIcon
+        {...icon}
+        key={idx}
+        size={20}
+        onPress={()=>props.changeActivePage(icon.id)}
+        hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+      />)}
   </View>
 )
 
@@ -50,6 +57,16 @@ const iconData = [
   }
 ]
 
+
+const styles = StyleSheet.create({
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderTopWidth: 1,
+    borderTopColor: 'rgb(225,225,225)',
+    height: 50
+  }
+})
 
 const mapDispatchToProps = dispatch => bindActionCreators({changeActivePage}, dispatch)
 export default connect(null,mapDispatchToProps)(Navbar)
