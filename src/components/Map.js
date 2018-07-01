@@ -4,62 +4,68 @@ import { Platform, StyleSheet, Text, View } from "react-native"
 import { MapView, Constants, Location, Permissions  } from "expo"
 import { Icon } from 'react-native-elements'
 
+import {getDistance} from '../helpers'
 
 class Map extends Component {
 
-  DISTANCE_THRESHOLD = 10
-  state = {
-    location: null,
-    region: {
-      latitude: 47.599815,
-      longitude:  -122.331373,
-      latitudeDelta: 0.006222,
-      longitudeDelta: 0.008221
-    },
-    errorMessage: null,
-    number: 0,
-    coordinates: [],
-    checkpoints: [
-      {
-        name: 'Occidental Square',
-        order: 1,
-        latitude: 47.600434,
-        longitude: -122.333188,
-        visited: false
+  constructor(props){
+    super(props)
+    this.DISTANCE_THRESHOLD = 10
+    this.state = {
+      location: null,
+      region: {
+        latitude: 47.599815,
+        longitude:  -122.331373,
+        latitudeDelta: 0.006222,
+        longitudeDelta: 0.008221
       },
-      {
-        name: 'Waterfall Garden Park',
-        order: 2,
-        latitude: 47.600111,
-        longitude: -122.331692,
-        visited: false
-      },
-      {
-        name: 'Cafe Zeitgeist',
-        order: 3,
-        latitude: 47.599129,
-        longitude: -122.331928,
-        visited: false
-      },
-      {
-        name: 'Galvanize',
-        order: 4,
-        latitude: 47.599155,
-        longitude: -122.333778,
-        visited: false
-      },
-    ]
+      errorMessage: null,
+      number: 0,
+      coordinates: [],
+      checkpoints: [
+        {
+          name: 'Occidental Square',
+          order: 1,
+          latitude: 47.600434,
+          longitude: -122.333188,
+          visited: false
+        },
+        {
+          name: 'Waterfall Garden Park',
+          order: 2,
+          latitude: 47.600111,
+          longitude: -122.331692,
+          visited: false
+        },
+        {
+          name: 'Cafe Zeitgeist',
+          order: 3,
+          latitude: 47.599129,
+          longitude: -122.331928,
+          visited: false
+        },
+        {
+          name: 'Galvanize',
+          order: 4,
+          latitude: 47.599155,
+          longitude: -122.333778,
+          visited: false
+        },
+      ]
+    }
   }
+
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
+      })
     } else {
-      this.timerId = setInterval(this.getLocationAsync,1000)
+      this.getLocationAsync()
     }
   }
+
   componentWillUnmount() {
     clearInterval(this.timerId)
   }
@@ -74,35 +80,6 @@ class Map extends Component {
 
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
-    this.testCheckpoints()
-  }
-
-  testCheckpoints(){
-    const newCheckpoints = this.state.checkpoints.map(checkpoint => {
-      const distance = this.getDistance(checkpoint, this.state.location.coords)
-      if (!checkpoint.visited && distance < this.DISTANCE_THRESHOLD) {
-        checkpoint = {...checkpoint, visited:true}
-      }
-      return checkpoint
-    })
-    this.setState({checkpoints: newCheckpoints})
-  }
-
-
-  getDistance(a,b){
-    var R = 6371000; // metres
-    var φ1 = a.latitude * (Math.PI / 180);
-    var φ2 = b.latitude * (Math.PI / 180);
-    var Δφ = φ2 - φ1
-    var Δλ = (b.longitude-a.longitude)* (Math.PI / 180);
-
-    var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ/2) * Math.sin(Δλ/2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-    var d = R * c;
-    return d
   }
 
 
@@ -120,41 +97,92 @@ class Map extends Component {
           this.setState({region})
         }}
       >
-        {/* {console.log(this.props)} */}
-        {/* {this.mapView ? console.log(this.state.region) : null} */}
         {
-          this.state.checkpoints.map((checkpoint, idx) =>
+          tracks.map((track, idx) =>
             <MapView.Marker
               key={idx}
-              coordinate={checkpoint}
-              title={`${checkpoint.name}`}
-              description={`Checkpoint ${checkpoint.order}\n${this.state.location ? this.getDistance(this.state.location.coords,checkpoint).toFixed(0) : 0} meters away`}
+              coordinate={track}
+              title={`${track.name}`}
+              description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}
             />
           )
-        }
-        {
-          this.state.coordinates.length > 1
-          ? <MapView.Polyline
-          		coordinates={this.state.coordinates}
-          		strokeColor="#000"
-          		strokeWidth={6}
-        	  />
-          : null
-        }
-        {
-          this.state.location
-          ? <MapView.Marker
-              coordinate={this.state.location.coords}
-              title={`${this.state.location ? [this.state.location.coords.latitude.toFixed(4), this.state.location.coords.longitude.toFixed(4)].join(',') : null }`}
-              description={'This is you!'}
-            />
-          : null
         }
 
       </MapView>
     )
 }
 
+
+
+
+tracks = [
+  {
+    name: 'Green Lake Loop',
+    latitude: 47.681471,
+    longitude: -122.328945,
+    length: 5
+  },
+  {
+    name: 'Ballard - Downtown Thru',
+    latitude: 47.667729,
+    longitude: -122.384861,
+    length: 12
+  },
+  {
+    name: 'All The Parks Thru',
+    latitude: 47.617981,
+    longitude: -122.319498,
+    length: 10
+  },
+  {
+    name: 'Troll Thru',
+    latitude: 47.651410,
+    longitude: -122.351054,
+    length: 6
+  },
+  {
+    name: 'Montlake Brige Loop',
+    latitude: 47.647282,
+    longitude: -122.304621,
+    length: 5
+  },
+  {
+    name: 'Eastlake Stairs Loop',
+    latitude: 47.634961,
+    longitude: -122.322331,
+    length: 5
+  },
+]
+
+const greenLakeTrack = [
+  '47.68149, -122.32894',
+  '47.68215, -122.33998',
+  '47.67553, -122.34627',
+  '47.67163, -122.34238',
+  '47.67574, -122.33385',
+  '47.68003, -122.32940'
+]
+
+const allTheParks = [
+  '-122.3194980, 47.6179810',
+  '-122.3190093, 47.6253467',
+  '-122.3145890, 47.6287560',
+  '-122.3157263, 47.6318587',
+  '-122.3101205, 47.6323639',
+  '-122.3073538, 47.6323856',
+  '-122.3054963, 47.6351799',
+  '-122.3059040, 47.6365029',
+  '-122.3048258, 47.6375512',
+  '-122.3044449, 47.6379235',
+  '-122.3021275, 47.6395265',
+  '-122.2968744, 47.6395130',
+  '-122.2947004, 47.6397976',
+  '-122.2921121, 47.6420331',
+  '-122.2903512, 47.6468337',
+  '-122.3009956, 47.6468544',
+  '-122.3044315, 47.6470622',
+  '-122.3039326, 47.6495161',
+]
 
 const mapStateToProps = ({activePage}) => ({activePage})
 export default connect(mapStateToProps)(Map)
