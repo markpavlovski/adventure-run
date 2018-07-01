@@ -1,8 +1,7 @@
 import React, {Component} from "react"
 import {connect} from 'react-redux'
-import { Platform, StyleSheet, Text, View } from "react-native"
-import { MapView, Constants, Location, Permissions  } from "expo"
-import { Icon } from 'react-native-elements'
+import { StyleSheet, Text, View } from 'react-native'
+import { MapView, Constants, Location, Permissions  } from 'expo'
 
 import {getDistance} from '../helpers'
 
@@ -20,38 +19,6 @@ class Map extends Component {
         longitudeDelta: 0.008221
       },
       errorMessage: null,
-      number: 0,
-      coordinates: [],
-      checkpoints: [
-        {
-          name: 'Occidental Square',
-          order: 1,
-          latitude: 47.600434,
-          longitude: -122.333188,
-          visited: false
-        },
-        {
-          name: 'Waterfall Garden Park',
-          order: 2,
-          latitude: 47.600111,
-          longitude: -122.331692,
-          visited: false
-        },
-        {
-          name: 'Cafe Zeitgeist',
-          order: 3,
-          latitude: 47.599129,
-          longitude: -122.331928,
-          visited: false
-        },
-        {
-          name: 'Galvanize',
-          order: 4,
-          latitude: 47.599155,
-          longitude: -122.333778,
-          visited: false
-        },
-      ]
     }
   }
 
@@ -66,10 +33,6 @@ class Map extends Component {
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timerId)
-  }
-
   getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -77,45 +40,35 @@ class Map extends Component {
         errorMessage: 'Permission to access location was denied',
       });
     }
-
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
+    this.setState({ location })
   }
 
 
   render = () => (
-      <MapView
-        provider='google'
-        style={{
-          flex: 1
-        }}
-        showsUserLocation
-        // showsMyLocationButton
-        initialRegion={this.state.region}
-        ref={ref => { this.mapView = ref }}
-        onRegionChange	= {region => {
-          this.setState({region})
-        }}
-      >
-        {
-          tracks.map((track, idx) =>
-            <MapView.Marker
-              key={idx}
-              coordinate={track}
-              title={`${track.name}`}
-              description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}
-            />
-          )
-        }
-
-      </MapView>
-    )
+    <MapView
+      provider='google'
+      style={{flex: 1}}
+      showsUserLocation
+      // showsMyLocationButton
+      initialRegion={this.state.region}
+      ref={ref => { this.mapView = ref }}
+      onRegionChange	= {region => this.setState({region})}>
+      {
+        tracks.map((track, idx) =>
+          <MapView.Marker
+            key={idx}
+            coordinate={track}
+            title={`${track.name}`}
+            description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}/>
+        )
+      }
+    </MapView>
+  )
 }
 
 
-
-
-tracks = [
+const tracks = [
   {
     name: 'Green Lake Loop',
     latitude: 47.681471,
@@ -153,7 +106,6 @@ tracks = [
     length: 5
   },
 ]
-
 const greenLakeTrack = [
   '47.68149, -122.32894',
   '47.68215, -122.33998',
@@ -162,7 +114,6 @@ const greenLakeTrack = [
   '47.67574, -122.33385',
   '47.68003, -122.32940'
 ]
-
 const allTheParks = [
   '-122.3194980, 47.6179810',
   '-122.3190093, 47.6253467',
@@ -183,6 +134,7 @@ const allTheParks = [
   '-122.3044315, 47.6470622',
   '-122.3039326, 47.6495161',
 ]
+
 
 const mapStateToProps = ({activePage}) => ({activePage})
 export default connect(mapStateToProps)(Map)
