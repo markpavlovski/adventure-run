@@ -1,10 +1,14 @@
-import React, { Component } from "react";
-import { Animated,Dimensions,ScrollView,StyleSheet,Text, View } from "react-native";
+import React, { Component } from 'react'
+import { Animated,Dimensions,ScrollView,StyleSheet,Text, View } from 'react-native'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
+import { changeActiveScrollItem} from '../actions'
 
 class ScrollList extends Component {
-  state = {currentItem: 0}
+  
   render() {
+    console.log(this.props)
     return (
       <Animated.ScrollView
         scrollEventThrottle={16}
@@ -16,18 +20,19 @@ class ScrollList extends Component {
         }
         onMomentumScrollEnd={event => {
           const newItem = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH)
-          this.setState({currentItem: newItem})
+          this.props.changeActiveScrollItem(newItem)
+          this.props.changeMapView(newItem)
         }}
         horizontal
         pagingEnabled
         style={styles.scrollView}
       >
-        <Screen text={this.state.currentItem} index={0} />
-        <Screen text={this.state.currentItem} index={1} />
-        <Screen text={this.state.currentItem} index={2} />
-        <Screen text={this.state.currentItem} index={3} />
-        <Screen text={this.state.currentItem} index={4} />
-        <Screen text={this.state.currentItem} index={5} />
+        <Screen text={this.props.activeScrollItem} index={0} />
+        <Screen text={this.props.activeScrollItem} index={1} />
+        <Screen text={this.props.activeScrollItem} index={2} />
+        <Screen text={this.props.activeScrollItem} index={3} />
+        <Screen text={this.props.activeScrollItem} index={4} />
+        <Screen text={this.props.activeScrollItem} index={5} />
       </Animated.ScrollView>
     );
   }
@@ -110,4 +115,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ScrollList
+const mapStateToProps = ({activeScrollItem}) => ({activeScrollItem})
+const mapDispatchToProps = dispatch => bindActionCreators({changeActiveScrollItem}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScrollList)

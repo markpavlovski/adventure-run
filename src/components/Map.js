@@ -19,12 +19,11 @@ class Map extends Component {
         latitude: 47.681471,
         longitude: -122.328945,
         latitudeDelta: 0.06222,
-        longitudeDelta: 0.08221
+        longitudeDelta: 0.08221,
       },
       errorMessage: null,
     }
   }
-
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -47,24 +46,28 @@ class Map extends Component {
     this.setState({ location })
   }
 
+  changeMapView = (trackIndex) => {
+    this.mapView.animateToRegion(tracks[trackIndex], 300)
+  }
 
   render = () => (
     <View>
-    <MapView
-      provider='google'
-      style={{height: SCREEN_HEIGHT-50, justifyContent: 'flex-end'}}
-      showsUserLocation
-      // showsMyLocationButton
-      initialRegion={this.state.region}
-      ref={ref => { this.mapView = ref }}
-      onRegionChange	= {region => this.setState({region})}>
-        {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>)}
+      {console.log(this.state.region)}
+      <MapView
+        provider='google'
+        style={{height: SCREEN_HEIGHT-50, justifyContent: 'flex-end'}}
+        showsUserLocation
+        // showsMyLocationButton
+        initialRegion={this.state.region}
+        ref={ref => { this.mapView = ref }}
+        onRegionChange	= {region => this.setState({region})}>
+          {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>)}
 
 
 
-    </MapView>
-    <ScrollList/>
-  </View>
+      </MapView>
+      <ScrollList changeMapView={this.changeMapView}/>
+    </View>
   )
 }
 
@@ -72,41 +75,56 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 
+const LATITUDE_DELTA =  0.06222
+const LONGITUDE_DELTA =  0.08221
+
 const tracks = [
   {
     name: 'Green Lake Loop',
     latitude: 47.681471,
     longitude: -122.328945,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 5
   },
   {
     name: 'Ballard - Downtown Thru',
     latitude: 47.667729,
     longitude: -122.384861,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 12
   },
   {
     name: 'All The Parks Thru',
     latitude: 47.617981,
     longitude: -122.319498,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 10
   },
   {
     name: 'Troll Thru',
     latitude: 47.651410,
     longitude: -122.351054,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 6
   },
   {
     name: 'Montlake Brige Loop',
     latitude: 47.647282,
     longitude: -122.304621,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 5
   },
   {
     name: 'Eastlake Stairs Loop',
     latitude: 47.634961,
     longitude: -122.322331,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
     length: 5
   },
 ]
@@ -140,5 +158,6 @@ const allTheParks = [
 ]
 
 
-const mapStateToProps = ({activePage}) => ({activePage})
+
+const mapStateToProps = ({activePage, activeScrollItem}) => ({activePage, activeScrollItem})
 export default connect(mapStateToProps)(Map)
