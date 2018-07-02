@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 
 
 const Stats = props => (
-  <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.2)'}}>
+  <View style={{flex: 1, backgroundColor: '#D81E5B'}}>
 
   </View>
 )

@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements'
 
 
 const Badges = props => (
-  <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+  <View style={{flex: 1, backgroundColor: '#3A3335'}}>
 
   </View>
 )

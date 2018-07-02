@@ -3,7 +3,7 @@ import { Animated,Dimensions,ScrollView,StyleSheet,Text, View } from "react-nati
 
 
 class ScrollList extends Component {
-  state = {xOffset: 0, listItems: [0,1,2,3,4,5], currentItem: 0}
+  state = {currentItem: 0}
   render() {
     return (
       <Animated.ScrollView
@@ -15,30 +15,19 @@ class ScrollList extends Component {
           )
         }
         onMomentumScrollEnd={event => {
-          // setTimeout(()=>console.log('hi', event.nativeEvent.contentOffset.x), 200))
-          console.log('current offset: ', this.state.xOffset)
-          console.log('new offset: ', event.nativeEvent.contentOffset.x)
-          if (Math.min(event.nativeEvent.contentOffset.x, (this.state.listItems.length-1)*300) > this.state.xOffset) {
-            console.log('move right')
-            this.setState({xOffset: Math.min(event.nativeEvent.contentOffset.x, (this.state.listItems.length-1)*300)})
-          } else if (Math.max(event.nativeEvent.contentOffset.x,0) < this.state.xOffset) {
-            console.log('move left')
-            this.setState({xOffset: Math.max(event.nativeEvent.contentOffset.x,0)})
-          } else {
-            console.log('do nothing')
-          }
-
+          const newItem = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH)
+          this.setState({currentItem: newItem})
         }}
         horizontal
         pagingEnabled
         style={styles.scrollView}
       >
-        <Screen text="Screen 1" index={0} />
-        <Screen text="Screen 2" index={1} />
-        <Screen text="Screen 3" index={2} />
-        <Screen text="Screen 4" index={3} />
-        <Screen text="Screen 5" index={4} />
-        <Screen text="Screen 6" index={5} />
+        <Screen text={this.state.currentItem} index={0} />
+        <Screen text={this.state.currentItem} index={1} />
+        <Screen text={this.state.currentItem} index={2} />
+        <Screen text={this.state.currentItem} index={3} />
+        <Screen text={this.state.currentItem} index={4} />
+        <Screen text={this.state.currentItem} index={5} />
       </Animated.ScrollView>
     );
   }
