@@ -7,13 +7,14 @@ import { changeActiveScrollItem} from '../actions'
 
 class ScrollList extends Component {
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.animatedValue = new Animated.Value(0)
   }
 
   componentDidMount () {
-    this.animateMount()
+    // this.animateMount()
+    this.props.registerCallback(this.animateMount)
   }
 
   componentWillUnmount () {
@@ -22,7 +23,8 @@ class ScrollList extends Component {
   }
 
 
-  animateMount() {
+  animateMount =() => {
+    console.log('triggered')
     this.animatedValue.setValue(0)
     Animated.timing(
       this.animatedValue,
