@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Animated,Dimensions,ScrollView,StyleSheet,Text, View } from 'react-native'
+import { Animated,Dimensions,ScrollView,StyleSheet,Text, View, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -7,9 +7,56 @@ import { changeActiveScrollItem} from '../actions'
 
 class ScrollList extends Component {
 
+  constructor () {
+    super()
+    this.animatedValue = new Animated.Value(0)
+  }
+
+  componentDidMount () {
+    this.animateMount()
+  }
+
+  componentWillUnmount () {
+    this.animateUnmount()
+  }
+
+
+
+
+  animateMount() {
+    this.animatedValue.setValue(0)
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: 1,
+        duration: 1000,
+        easing: Easing.linear
+      }
+    )
+    .start()
+  }
+
+  animateUnmount() {
+    this.animatedValue.setValue(1)
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: 0,
+        duration: 1000,
+        easing: Easing.linear
+      }
+    )
+    .start()
+  }
+
   render() {
+    const marginTop = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [250, 0]
+    })
     console.log(this.props.trackData);
     return (
+      <Animated.View style={{marginTop}}>
       <Animated.ScrollView
         scrollEventThrottle={16}
         onScroll={
@@ -30,6 +77,8 @@ class ScrollList extends Component {
         {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index}/>)}
 
       </Animated.ScrollView>
+    </Animated.View>
+
     );
   }
 }

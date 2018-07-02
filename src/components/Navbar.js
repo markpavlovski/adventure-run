@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     borderTopWidth: 1,
     borderTopColor: 'rgb(225,225,225)',
-    height: 50
+    height: 50,
+    backgroundColor: 'white'
   }
 })
 
