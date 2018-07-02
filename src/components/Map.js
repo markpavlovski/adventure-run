@@ -12,15 +12,11 @@ class Map extends Component {
 
   constructor(props){
     super(props)
+    const tracks = this.props.trackData
     this.DISTANCE_THRESHOLD = 10
     this.state = {
       location: null,
-      region: {
-        latitude: 47.681471,
-        longitude: -122.328945,
-        latitudeDelta: 0.06222,
-        longitudeDelta: 0.08221,
-      },
+      region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
       errorMessage: null,
     }
   }
@@ -47,12 +43,16 @@ class Map extends Component {
   }
 
   changeMapView = (trackIndex) => {
-    this.mapView.animateToRegion(tracks[trackIndex], 300)
+    const tracks = this.props.trackData
+    const focusLocation = tracks[trackIndex]
+    const latitude = focusLocation.latitude - 0.009
+    this.mapView.animateToRegion({...focusLocation, latitude }, 500)
   }
 
-  render = () => (
+  render = () => {
+  const tracks = this.props.trackData
+  return (
     <View>
-      {console.log(this.state.region)}
       <MapView
         provider='google'
         style={{height: SCREEN_HEIGHT-50, justifyContent: 'flex-end'}}
@@ -62,72 +62,15 @@ class Map extends Component {
         ref={ref => { this.mapView = ref }}
         onRegionChange	= {region => this.setState({region})}>
           {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>)}
-
-
-
       </MapView>
       <ScrollList changeMapView={this.changeMapView}/>
     </View>
-  )
+  )}
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-
-const LATITUDE_DELTA =  0.06222
-const LONGITUDE_DELTA =  0.08221
-
-const tracks = [
-  {
-    name: 'Green Lake Loop',
-    latitude: 47.681471,
-    longitude: -122.328945,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5
-  },
-  {
-    name: 'Ballard - Downtown Thru',
-    latitude: 47.667729,
-    longitude: -122.384861,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 12
-  },
-  {
-    name: 'All The Parks Thru',
-    latitude: 47.617981,
-    longitude: -122.319498,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 10
-  },
-  {
-    name: 'Troll Thru',
-    latitude: 47.651410,
-    longitude: -122.351054,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 6
-  },
-  {
-    name: 'Montlake Brige Loop',
-    latitude: 47.647282,
-    longitude: -122.304621,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5
-  },
-  {
-    name: 'Eastlake Stairs Loop',
-    latitude: 47.634961,
-    longitude: -122.322331,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5
-  },
-]
 const greenLakeTrack = [
   '47.68149, -122.32894',
   '47.68215, -122.33998',
@@ -159,5 +102,5 @@ const allTheParks = [
 
 
 
-const mapStateToProps = ({activePage, activeScrollItem}) => ({activePage, activeScrollItem})
+const mapStateToProps = ({activePage, activeScrollItem, trackData}) => ({activePage, activeScrollItem, trackData})
 export default connect(mapStateToProps)(Map)

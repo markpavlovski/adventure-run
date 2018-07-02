@@ -6,9 +6,9 @@ import { bindActionCreators } from 'redux'
 import { changeActiveScrollItem} from '../actions'
 
 class ScrollList extends Component {
-  
+
   render() {
-    console.log(this.props)
+    console.log(this.props.trackData);
     return (
       <Animated.ScrollView
         scrollEventThrottle={16}
@@ -27,12 +27,8 @@ class ScrollList extends Component {
         pagingEnabled
         style={styles.scrollView}
       >
-        <Screen text={this.props.activeScrollItem} index={0} />
-        <Screen text={this.props.activeScrollItem} index={1} />
-        <Screen text={this.props.activeScrollItem} index={2} />
-        <Screen text={this.props.activeScrollItem} index={3} />
-        <Screen text={this.props.activeScrollItem} index={4} />
-        <Screen text={this.props.activeScrollItem} index={5} />
+        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index}/>)}
+
       </Animated.ScrollView>
     );
   }
@@ -115,7 +111,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({activeScrollItem}) => ({activeScrollItem})
+const mapStateToProps = ({activeScrollItem, trackData}) => ({activeScrollItem, trackData})
 const mapDispatchToProps = dispatch => bindActionCreators({changeActiveScrollItem}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScrollList)
