@@ -18,7 +18,12 @@ class Map extends Component {
       location: null,
       region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
       errorMessage: null,
+      showScrollList: false
     }
+  }
+
+  showScrollList = bool => {
+    this.setState({showScrollList: true})
   }
 
   componentWillMount() {
@@ -49,6 +54,10 @@ class Map extends Component {
     this.mapView.animateToRegion({...focusLocation, latitude }, 500)
   }
 
+  handleMapPress = () => {
+    if (this.state.showScrollList) this.setState({showScrollList: false})
+  }
+
   render = () => {
   const tracks = this.props.trackData
   return (
@@ -60,10 +69,12 @@ class Map extends Component {
         // showsMyLocationButton
         initialRegion={this.state.region}
         ref={ref => { this.mapView = ref }}
-        onRegionChange	= {region => this.setState({region})}>
-          {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track}}/>)}
+        onRegionChange	= {region => this.setState({region})}
+        onPress = {()=>this.handleMapPress()}
+      >
+          {tracks.map((track, idx) =>  <TrackMarker key={idx} {...{track, showScrollList: this.showScrollList}}/>)}
       </MapView>
-      <ScrollList changeMapView={this.changeMapView}/>
+      {this.state.showScrollList ? <ScrollList changeMapView={this.changeMapView}/> : null}
     </View>
   )}
 }

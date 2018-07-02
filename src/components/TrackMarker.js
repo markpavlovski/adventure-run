@@ -3,13 +3,18 @@ import { StyleSheet, Text, View } from "react-native"
 import { MapView } from 'expo'
 
 
-const TrackMarker = ({track}) => (
+const TrackMarker = ({track, showScrollList}) => (
   <MapView.Marker
     coordinate={track}
     title={`${track.name}`}
-    description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}>
+    description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}
+    onPress = {()=>{
+      showScrollList(true)
+    }}
+  >
+    <MapView.Callout tooltip={true} />
 
-      <MapView.Callout>
+      {/* <MapView.Callout>
         <View style={{padding: 20}}>
           <Text>
             {`${track.name}`}
@@ -18,7 +23,7 @@ const TrackMarker = ({track}) => (
             {`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}
           </Text>
         </View>
-      </MapView.Callout>
+      </MapView.Callout> */}
   </MapView.Marker>
 )
 

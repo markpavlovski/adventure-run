@@ -17,10 +17,9 @@ class ScrollList extends Component {
   }
 
   componentWillUnmount () {
+    console.log('unmounting');
     this.animateUnmount()
   }
-
-
 
 
   animateMount() {
@@ -29,7 +28,7 @@ class ScrollList extends Component {
       this.animatedValue,
       {
         toValue: 1,
-        duration: 1000,
+        duration: 300,
         easing: Easing.linear
       }
     )
@@ -42,7 +41,7 @@ class ScrollList extends Component {
       this.animatedValue,
       {
         toValue: 0,
-        duration: 1000,
+        duration: 300,
         easing: Easing.linear
       }
     )
@@ -54,7 +53,6 @@ class ScrollList extends Component {
       inputRange: [0, 1],
       outputRange: [250, 0]
     })
-    console.log(this.props.trackData);
     return (
       <Animated.View style={{marginTop}}>
       <Animated.ScrollView
