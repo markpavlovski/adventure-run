@@ -14,7 +14,8 @@ class Map extends Component {
     super(props)
     const tracks = this.props.trackData
     this.DISTANCE_THRESHOLD = 10
-    this.animateStyle = _ => _
+    this.triggerShowAnimation = _ => _
+    this.triggerHideAnimation = _ => _
     this.state = {
       location: null,
       region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
@@ -56,11 +57,16 @@ class Map extends Component {
   }
 
   handleMapPress = () => {
-    if (this.state.showScrollList) this.setState({showScrollList: false})
+    if (this.state.showScrollList) {
+      this.setShowScrollList(false)
+      this.triggerHideAnimation()
+    }
+
   }
 
-  registerCallback = (cb) => {
-    this.animateStyle = cb
+  registerCallback = (show,hide) => {
+    this.triggerShowAnimation = show
+    this.triggerHideAnimation = hide
   }
 
   render = () => {
@@ -80,7 +86,7 @@ class Map extends Component {
           {tracks.map((track, idx) =>
             <TrackMarker
               key={idx}
-              animateStyle={this.animateStyle}
+              triggerShowAnimation={this.triggerShowAnimation}
               {...{track, setShowScrollList: this.setShowScrollList}}/>)}
       </MapView>
       <ScrollList changeMapView={this.changeMapView} registerCallback={this.registerCallback}/>

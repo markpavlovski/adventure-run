@@ -13,18 +13,16 @@ class ScrollList extends Component {
   }
 
   componentDidMount () {
-    // this.animateMount()
-    this.props.registerCallback(this.animateMount)
+    this.props.registerCallback(this.animateMount,this.animateUnmount)
   }
 
   componentWillUnmount () {
-    console.log('unmounting');
+    console.log('unmounting')
     this.animateUnmount()
   }
 
 
   animateMount =() => {
-    console.log('triggered')
     this.animatedValue.setValue(0)
     Animated.timing(
       this.animatedValue,
@@ -37,7 +35,7 @@ class ScrollList extends Component {
     .start()
   }
 
-  animateUnmount() {
+  animateUnmount = () => {
     this.animatedValue.setValue(1)
     Animated.timing(
       this.animatedValue,

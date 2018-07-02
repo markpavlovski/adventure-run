@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from "react-native"
 import { MapView } from 'expo'
 
 
-const TrackMarker = ({track, setShowScrollList, animateStyle}) => (
+const TrackMarker = ({track, setShowScrollList, triggerShowAnimation}) => (
   <MapView.Marker
     coordinate={track}
     title={`${track.name}`}
     description={`${track.length.toFixed(1)} km / ${(track.length * 0.621371).toFixed(1)} mi`}
     onPress = {()=>{
       setShowScrollList(true)
-      animateStyle()
+      triggerShowAnimation()
     }}
   >
     <MapView.Callout tooltip={true} />
