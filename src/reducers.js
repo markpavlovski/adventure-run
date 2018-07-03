@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, SET_FIRST_TRACK } from './actions'
+import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM } from './actions'
 
 
 const LATITUDE_DELTA =  0.04
@@ -108,13 +108,7 @@ const activeScrollItem = (state = INITIAL_SCROLL_ITEM, action) => {
 }
 
 const trackData = (state = INITIAL_TRACK_DATA, action) => {
-  switch(action.type){
-    case SET_FIRST_TRACK: {
-      const firstTrack = action.payload
-      return [firstTrack, ...state.filter(track => track.id !== firstTrack.id)]
-    }
-    default: return state
-  }
+  return state
 }
 
 

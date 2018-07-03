@@ -3,6 +3,7 @@ import { Animated,Dimensions,ScrollView,StyleSheet,Text, View, Easing } from 're
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+
 import { changeActiveScrollItem} from '../actions'
 
 class ScrollList extends Component {
@@ -22,8 +23,10 @@ class ScrollList extends Component {
   }
 
 
-  animateMount =() => {
+  animateMount = index => {
     this.animatedValue.setValue(0)
+    this.scrollToIndex(index)
+    this.props.changeMapView(index)
     Animated.timing(
       this.animatedValue,
       {
@@ -46,6 +49,13 @@ class ScrollList extends Component {
       }
     )
     .start()
+  }
+
+  scrollToIndex = index => {
+    this.scrollView.getNode().scrollTo({
+      x: SCREEN_WIDTH * index,
+      animated: false
+    });
   }
 
   render() {
@@ -71,9 +81,9 @@ class ScrollList extends Component {
         horizontal
         pagingEnabled
         style={styles.scrollView}
+        ref={ref=>(this.scrollView=ref)}
       >
         {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index}/>)}
-
       </Animated.ScrollView>
     </Animated.View>
 
@@ -86,7 +96,9 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const xOffset = new Animated.Value(0);
 
-const Screen = props => {
+class Screen extends Component {
+  render(){
+    const props = this.props
   return (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, transitionAnimation(props.index)]}>
@@ -95,6 +107,7 @@ const Screen = props => {
     </View>
   );
 };
+}
 
 const transitionAnimation = index => {
   return {
@@ -157,6 +170,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 });
+
 
 const mapStateToProps = ({activeScrollItem, trackData}) => ({activeScrollItem, trackData})
 const mapDispatchToProps = dispatch => bindActionCreators({changeActiveScrollItem}, dispatch)
