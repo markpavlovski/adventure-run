@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM } from './actions'
+import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, SET_FIRST_TRACK } from './actions'
 
 
 const LATITUDE_DELTA =  0.04
@@ -9,6 +9,7 @@ const INITIAL_PAGE = 2
 const INITIAL_SCROLL_ITEM = 0
 const INITIAL_TRACK_DATA = [
   {
+    id: 0,
     name: 'Green Lake Loop',
     latitude: 47.681471,
     longitude: -122.328945,
@@ -17,6 +18,7 @@ const INITIAL_TRACK_DATA = [
     length: 5
   },
   {
+    id: 1,
     name: 'Ballard - Downtown Thru',
     latitude: 47.667729,
     longitude: -122.384861,
@@ -25,6 +27,7 @@ const INITIAL_TRACK_DATA = [
     length: 12
   },
   {
+    id: 2,
     name: 'All The Parks Thru',
     latitude: 47.617981,
     longitude: -122.319498,
@@ -33,6 +36,7 @@ const INITIAL_TRACK_DATA = [
     length: 10
   },
   {
+    id: 3,
     name: 'Troll Thru',
     latitude: 47.651410,
     longitude: -122.351054,
@@ -41,6 +45,7 @@ const INITIAL_TRACK_DATA = [
     length: 6
   },
   {
+    id: 4,
     name: 'Montlake Brige Loop',
     latitude: 47.647282,
     longitude: -122.304621,
@@ -49,6 +54,7 @@ const INITIAL_TRACK_DATA = [
     length: 5
   },
   {
+    id: 5,
     name: 'Eastlake Stairs Loop',
     latitude: 47.634961,
     longitude: -122.322331,
@@ -101,13 +107,14 @@ const activeScrollItem = (state = INITIAL_SCROLL_ITEM, action) => {
   }
 }
 
-
 const trackData = (state = INITIAL_TRACK_DATA, action) => {
-  // switch(action.type){
-  //   case CHANGE_ACTIVE_SCROLL_ITEM: return action.payload
-  //   default: return state
-  // }
-  return state
+  switch(action.type){
+    case SET_FIRST_TRACK: {
+      const firstTrack = action.payload
+      return [firstTrack, ...state.filter(track => track.id !== firstTrack.id)]
+    }
+    default: return state
+  }
 }
 
 
