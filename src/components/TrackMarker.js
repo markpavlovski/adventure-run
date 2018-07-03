@@ -4,11 +4,8 @@ import { MapView } from 'expo'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { setFirstTrack } from '../actions'
 
-
-
-const TrackMarker = ({track, setShowScrollList, triggerShowAnimation, setFirstTrack}) => (
+const TrackMarker = ({track, setShowScrollList, triggerShowAnimation}) => (
   <MapView.Marker
     coordinate={track}
     onPress = {()=>{
@@ -20,5 +17,4 @@ const TrackMarker = ({track, setShowScrollList, triggerShowAnimation, setFirstTr
   </MapView.Marker>
 )
 
-const mapDispatchToProps = dispatch => bindActionCreators({setFirstTrack}, dispatch)
-export default connect(null,mapDispatchToProps)(TrackMarker)
+export default TrackMarker

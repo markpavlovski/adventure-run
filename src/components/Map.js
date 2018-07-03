@@ -10,65 +10,6 @@ import ScrollList from './ScrollList'
 
 class Map extends Component {
 
-  constructor(props){
-    super(props)
-    const tracks = this.props.trackData
-    this.DISTANCE_THRESHOLD = 10
-    this.triggerShowAnimation = _ => _
-    this.triggerHideAnimation = _ => _
-    this.state = {
-      location: null,
-      region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
-      errorMessage: null,
-      showScrollList: false
-    }
-  }
-
-  setShowScrollList = bool => {
-    this.setState({showScrollList: bool})
-  }
-
-  componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      })
-    } else {
-      this.getLocationAsync()
-    }
-  }
-
-  getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location })
-  }
-
-  changeMapView = (trackIndex) => {
-    const tracks = this.props.trackData
-    const focusLocation = tracks[trackIndex]
-    const latitude = focusLocation.latitude - 0.009
-    this.mapView.animateToRegion({...focusLocation, latitude }, 500)
-  }
-
-  handleMapPress = () => {
-    if (this.state.showScrollList) {
-      this.setShowScrollList(false)
-      this.triggerHideAnimation()
-    }
-
-  }
-
-  registerCallback = (show,hide) => {
-    this.triggerShowAnimation = show
-    this.triggerHideAnimation = hide
-  }
-
   render = () => {
   const tracks = this.props.trackData
   return (
@@ -87,11 +28,86 @@ class Map extends Component {
             <TrackMarker
               key={idx}
               triggerShowAnimation={this.triggerShowAnimation}
-              {...{track, setShowScrollList: this.setShowScrollList}}/>)}
+              {...{track, setShowScrollList: this.setShowScrollList}}
+            />
+          )}
       </MapView>
-      <ScrollList changeMapView={this.changeMapView} registerCallback={this.registerCallback}/>
+      <ScrollList
+        changeMapView={this.changeMapView}
+        registerCallback={this.registerCallback}
+      />
     </View>
   )}
+
+  constructor(props){
+    super(props)
+    const tracks = this.props.trackData
+    this.DISTANCE_THRESHOLD = 10
+    this.triggerShowAnimation = _ => _
+    this.triggerHideAnimation = _ => _
+    this.state = {
+      location: null,
+      region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
+      errorMessage: null,
+      showScrollList: false
+    }
+  }
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      })
+    } else {
+      this.getLocationAsync()
+    }
+  }
+
+  componentDidMount(){
+    setTimeout(this.fitToMarkers, 100)
+  }
+
+
+  fitToMarkers = () => {
+    this.mapView.fitToCoordinates(this.props.trackData, {edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }})
+  }
+
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+    this.setState({ location })
+  }
+
+  setShowScrollList = bool => {
+    this.setState({showScrollList: bool})
+  }
+
+
+  changeMapView = (trackIndex) => {
+    const tracks = this.props.trackData
+    const focusLocation = tracks[trackIndex]
+    const latitude = focusLocation.latitude - 0.009
+    this.mapView.animateToRegion({...focusLocation, latitude }, 500)
+  }
+
+  handleMapPress = () => {
+    if (this.state.showScrollList) {
+      this.setShowScrollList(false)
+      this.triggerHideAnimation()
+      this.fitToMarkers()
+    }
+
+  }
+
+  registerCallback = (show,hide) => {
+    this.triggerShowAnimation = show
+    this.triggerHideAnimation = hide
+  }
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
