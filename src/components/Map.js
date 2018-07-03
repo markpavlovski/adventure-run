@@ -6,38 +6,48 @@ import { MapView, Constants, Location, Permissions } from 'expo'
 import {getDistance} from '../helpers'
 
 import TrackMarker from './TrackMarker'
+import CheckpointMarker from './CheckpointMarker'
 import ScrollList from './ScrollList'
 
 class Map extends Component {
 
   render = () => {
-  const tracks = this.props.trackData
-  return (
-    <View>
-      <MapView
-        provider='google'
-        style={{height: SCREEN_HEIGHT-50}}
-        showsUserLocation
-        // showsMyLocationButton
-        initialRegion={this.state.region}
-        ref={ref => { this.mapView = ref }}
-        onRegionChange	= {region => this.setState({region})}
-        onPress = {()=>this.handleMapPress()}
-      >
-          {tracks.map((track, idx) =>
-            <TrackMarker
-              key={idx}
-              triggerShowAnimation={this.triggerShowAnimation}
-              {...{track, setShowScrollList: this.setShowScrollList}}
-            />
-          )}
-      </MapView>
-      <ScrollList
-        changeMapView={this.changeMapView}
-        registerCallback={this.registerCallback}
-      />
-    </View>
-  )}
+    const tracks = this.props.trackData
+    return (
+      <View>
+        <MapView
+          provider='google'
+          style={{height: SCREEN_HEIGHT-50}}
+          showsUserLocation
+          // showsMyLocationButton
+          initialRegion={this.state.region}
+          ref={ref => { this.mapView = ref }}
+          onRegionChange	= {region => this.setState({region})}
+          onPress = {()=>this.handleMapPress()}
+        >
+            { this.state.showTrackMarkers ? tracks.map((track, idx) =>
+              <TrackMarker
+                key={idx}
+                triggerShowAnimation={this.triggerShowAnimation}
+                {...{track, setShowScrollList: this.setShowScrollList}}
+              />
+            ) : null }
+            { this.state.showCheckpointMarkers ? tracks.find(track => track.id === this.state.trackId).checkPoints.map((checkPoint, idx, checkPoints) =>
+              <CheckpointMarker
+                key={idx}
+                {...{checkPoint, idx, checkPoints}}
+              />
+            ) : null }
+
+        </MapView>
+        <ScrollList
+          changeMapView={this.changeMapView}
+          registerCallback={this.registerCallback}
+          exploreTrack={this.exploreTrack}
+        />
+      </View>
+    )
+  }
 
   constructor(props){
     super(props)
@@ -49,7 +59,10 @@ class Map extends Component {
       location: null,
       region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
       errorMessage: null,
-      showScrollList: false
+      showScrollList: false,
+      showTrackMarkers: true,
+      showCheckpointMarkers: false,
+      activeTrackId: null,
     }
   }
 
@@ -64,12 +77,12 @@ class Map extends Component {
   }
 
   componentDidMount(){
-    setTimeout(this.fitToMarkers, 100)
+    setTimeout(() => this.fitToMarkers(this.props.trackData), 100)
   }
 
 
-  fitToMarkers = () => {
-    this.mapView.fitToCoordinates(this.props.trackData, {edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }})
+  fitToMarkers = (locations) => {
+    this.mapView.fitToCoordinates(locations, {edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }})
   }
 
   getLocationAsync = async () => {
@@ -99,7 +112,7 @@ class Map extends Component {
     if (this.state.showScrollList) {
       this.setShowScrollList(false)
       this.triggerHideAnimation()
-      this.fitToMarkers()
+      this.fitToMarkers(this.props.trackData)
     }
 
   }
@@ -108,6 +121,23 @@ class Map extends Component {
     this.triggerShowAnimation = show
     this.triggerHideAnimation = hide
   }
+
+  exploreTrack = trackId => {
+    const tracks = this.props.trackData
+    console.log(trackId)
+    const checkPoints = tracks.find(track => track.id === trackId).checkPoints
+    console.log(checkPoints)
+    this.fitToMarkers(checkPoints)
+    this.triggerHideAnimation()
+    this.setShowScrollList(false)
+    this.setState({
+      showTrackMarkers: false,
+      showCheckpointMarkers: true,
+      trackId
+    })
+    setTimeout(()=>console.log(this.state.trackId),300)
+  }
+
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;

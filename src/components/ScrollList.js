@@ -84,7 +84,7 @@ class ScrollList extends Component {
         style={styles.scrollView}
         ref={ref=>(this.scrollView=ref)}
       >
-        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index}/>)}
+        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index} exploreTrack={this.props.exploreTrack}/>)}
       </Animated.ScrollView>
     </Animated.View>
 
@@ -97,10 +97,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const xOffset = new Animated.Value(0);
 
-class Screen extends Component {
-  render(){
-    const props = this.props
-  return (
+const Screen = props => (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, transitionAnimation(props.index)]}>
         <View style={{
@@ -121,13 +118,14 @@ class Screen extends Component {
               borderColor: '#378287',
               borderWidth: 2,
               borderRadius: 5
-            }} />
+            }}
+            onPress={()=>props.exploreTrack(props.index)}
+          />
         </View>
       </Animated.View>
     </View>
-  );
-};
-}
+)
+
 
 const transitionAnimation = index => {
   return {
