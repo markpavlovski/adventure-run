@@ -110,7 +110,7 @@ const Screen = props => (
             title="EXPLORE TRACK"
             loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
             // titleStyle={{ fontWeight: "700", fontSize: 70 }}
-            fontSize={20}
+            fontSize={16}
             color='#378287'
             buttonStyle={{
               backgroundColor: "rgba(92, 99,216, 0)",

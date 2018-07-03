@@ -9,7 +9,7 @@ const CheckpointMarker = ({checkPoint, idx, checkPoints}) => {
   let title = null
   if (idx === 0) title = 'Start'
   else if (idx === checkPoints.length - 1) title = 'Finish'
-  else title = `checkPoint ${idx}`
+  else title = `Checkpoint ${idx}`
   return (
   <MapView.Marker
     coordinate={checkPoint}

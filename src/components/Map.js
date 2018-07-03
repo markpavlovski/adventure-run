@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions } from 'react-native'
+import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions, TouchableHighlight } from 'react-native'
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
@@ -8,12 +8,15 @@ import {getDistance} from '../helpers'
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
 import ScrollList from './ScrollList'
+import BackButton from './BackButton'
 
 class Map extends Component {
 
   render = () => {
     const tracks = this.props.trackData
     return (
+    <View>
+      <BackButton visible={this.state.showTrackDetail}/>
       <View>
         <MapView
           provider='google'
@@ -25,6 +28,7 @@ class Map extends Component {
           onRegionChange	= {region => this.setState({region})}
           onPress = {()=>this.handleMapPress()}
         >
+          {/*  RENDER TRACK MARKERS */}
             { this.state.showTrackMarkers ? tracks.map((track, idx) =>
               <TrackMarker
                 key={idx}
@@ -32,12 +36,37 @@ class Map extends Component {
                 {...{track, setShowScrollList: this.setShowScrollList}}
               />
             ) : null }
-            { this.state.showCheckpointMarkers ? tracks.find(track => track.id === this.state.trackId).checkPoints.map((checkPoint, idx, checkPoints) =>
+
+          {/*  RENDER CHECKPOINTS */}
+
+            { this.state.showTrackDetail ? tracks.find(track => track.id === this.state.trackId).checkPoints.map((checkPoint, idx, checkPoints) =>
               <CheckpointMarker
                 key={idx}
                 {...{checkPoint, idx, checkPoints}}
               />
             ) : null }
+
+        {/*  RENDER TRACK UI */}
+
+        {/* <View style={{
+          backgroundColor: 'white',
+          width: 60,
+          height: 60,
+          marginTop: 40,
+          marginLeft: 20,
+          borderRadius: 30,
+          shadowOffset:{  width: 5,  height: 5,  },
+          shadowColor: 'black',
+          shadowOpacity: 0.2,
+          // padding: 10,
+          justifyContent: 'center'
+        }}>
+            <Text style={{margin: 10, fontSize: 30, textAlign: 'left'}}>
+               Back
+            </Text>
+        </View> */}
+
+
 
         </MapView>
         <ScrollList
@@ -46,6 +75,7 @@ class Map extends Component {
           exploreTrack={this.exploreTrack}
         />
       </View>
+    </View>
     )
   }
 
@@ -61,7 +91,7 @@ class Map extends Component {
       errorMessage: null,
       showScrollList: false,
       showTrackMarkers: true,
-      showCheckpointMarkers: false,
+      showTrackDetail: false,
       activeTrackId: null,
     }
   }
@@ -132,7 +162,7 @@ class Map extends Component {
     this.setShowScrollList(false)
     this.setState({
       showTrackMarkers: false,
-      showCheckpointMarkers: true,
+      showTrackDetail: true,
       trackId
     })
     setTimeout(()=>console.log(this.state.trackId),300)
