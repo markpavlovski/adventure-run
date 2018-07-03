@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Animated,Dimensions,ScrollView,StyleSheet,Text, View, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { Button } from 'react-native-elements';
 
 
 import { changeActiveScrollItem} from '../actions'
@@ -102,7 +103,26 @@ class Screen extends Component {
   return (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, transitionAnimation(props.index)]}>
-        <Text style={styles.text}>{props.text}</Text>
+        <View style={{
+          justifyContent: 'space-around',
+          height: 170,
+          alignItems: 'center'
+        }}>
+          <Text style={styles.text}>{props.text}</Text>
+          <Button
+            title="EXPLORE TRACK"
+            loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
+            // titleStyle={{ fontWeight: "700", fontSize: 70 }}
+            fontSize={20}
+            color='#378287'
+            buttonStyle={{
+              backgroundColor: "rgba(92, 99,216, 0)",
+              padding: 10,
+              borderColor: '#378287',
+              borderWidth: 2,
+              borderRadius: 5
+            }} />
+        </View>
       </Animated.View>
     </View>
   );
@@ -166,7 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   text: {
-    fontSize: 45,
+    fontSize: 30,
     fontWeight: "bold"
   }
 });
