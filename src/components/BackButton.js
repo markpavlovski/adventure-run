@@ -6,9 +6,6 @@ import { Icon } from 'react-native-elements'
 const BackButton = props => {
   const SCREEN_HEIGHT = Dimensions.get("window").height;
   return props.visible ?  (
-  // <View style={{flex: 1, backgroundColor: '#EB5E55'}}>
-  //
-  // </View>
   <View style={{
     backgroundColor: 'white',
     width: 60,
@@ -21,7 +18,6 @@ const BackButton = props => {
     shadowOffset:{  width: 5,  height: 5,  },
     shadowColor: 'black',
     shadowOpacity: 0.4,
-    // padding: 10,
     justifyContent: 'center'
   }}
   >
@@ -30,7 +26,7 @@ const BackButton = props => {
       type='simple-line-icon'
       color='#378287'
       size={40}
-      onPress={()=>console.log('hiii')}
+      onPress={props.resetView}
       underlayColor={'rgba(0,0,0,0)'}
       containerStyle={{backgroundColor: 'rgba(0,0,0,0)'}}
     />
