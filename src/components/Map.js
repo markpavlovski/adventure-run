@@ -9,7 +9,7 @@ import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
 import ScrollList from './ScrollList'
 import BackButton from './BackButton'
-import TrackUI from './TrackUI'
+import StartButton from './StartButton'
 
 class Map extends Component {
 
@@ -18,7 +18,7 @@ class Map extends Component {
     return (
     <View>
       <BackButton visible={this.state.showTrackDetail} resetView={this.resetView}/>
-      <TrackUI visible={this.state.showTrackDetail}/>
+      <StartButton visible={this.state.showTrackDetail}/>
       <View>
         <MapView
           provider='google'

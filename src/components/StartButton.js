@@ -3,22 +3,19 @@ import { StyleSheet, Text, View, Dimensions } from "react-native"
 import { Icon } from 'react-native-elements'
 
 
-const TrackUI = props => {
+const StartButton = props => {
   const SCREEN_HEIGHT = Dimensions.get("window").height
-  const CONTAINER_HEIGHT = 60
+  const CONTAINER_HEIGHT = 50
   const MARGIN_TOP = SCREEN_HEIGHT - CONTAINER_HEIGHT - 80
   return props.visible ?  (
   <View style={{
-    backgroundColor: 'rgba(0,0,0,.9)',
+    backgroundColor: 'rgba(55,130,135,.9)',
     height: CONTAINER_HEIGHT,
-    margin: 30,
+    margin: 20,
     marginTop: MARGIN_TOP,
     marginBottom: - CONTAINER_HEIGHT - MARGIN_TOP,
     zIndex: 99,
     borderRadius: 30,
-    // shadowOffset:{  width: 5,  height: 5,  },
-    // shadowColor: 'black',
-    // shadowOpacity: 0.4,
     justifyContent: 'center',
   }}
   >
@@ -29,7 +26,7 @@ const TrackUI = props => {
       color: 'white'
 
 
-    }} >Start</Text>
+    }} >{ true ? 'Too Far to Start' : 'Start'}</Text>
   </View>
 )
 :  null
@@ -37,4 +34,4 @@ const TrackUI = props => {
 
 
 
-export default TrackUI
+export default StartButton
