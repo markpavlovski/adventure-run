@@ -20,25 +20,18 @@ class Screen extends Component {
     return (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, this.transitionAnimation(props.index)]}>
-        <View style={{
-          justifyContent: 'space-around',
-          height: 200,
-          alignItems: 'center'
-        }}>
-            <GestureRecognizer
-              onSwipeUp={(state) => this.onSwipeUp(state)}
-              onSwipeDown={(state) => this.onSwipeDown(state)}
-              config={config}
-              style={{
-                flex: 1,
-                backgroundColor: this.state.backgroundColor
-              }}
-            >
+        <View style={styles.contentContainer}>
+          <GestureRecognizer
+            onSwipeUp={(state) => this.onSwipeUp(state)}
+            onSwipeDown={(state) => this.onSwipeDown(state)}
+            config={config}
+            style={styles.gestureContainer}
+          >
             <Text style={styles.text} onPress={this.handleAnimateSlide}>{props.text}</Text>
-
           </GestureRecognizer>
           <Button
-            title="EXPLORE TRACK"
+            style={{marginTop: 50}}
+            title="START THE RUN"
             loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
             // titleStyle={{ fontWeight: "700", fontSize: 70 }}
             fontSize={16}
@@ -50,8 +43,9 @@ class Screen extends Component {
               borderWidth: 2,
               borderRadius: 5
             }}
-            onPress={()=>props.exploreTrack(props.index)}
+            onPress={()=>props.beginActivity(props.index)}
           />
+          <Text style={styles.warningText}>You Must be within 20 min from the track to begin this activity.</Text>
         </View>
       </Animated.View>
     </View>
@@ -144,9 +138,30 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: "white"
   },
+  gestureContainer: {
+    justifyContent: 'center',
+    height: SMALL_CONTENT_HEIGHT,
+    width: SCREEN_WIDTH,
+    alignItems: 'center'
+  },
+  contentContainer: {
+    justifyContent: 'flex-start',
+    height: 400,
+    alignItems: 'center'
+  },
   text: {
+    height: SMALL_CONTENT_HEIGHT,
+    width: SCREEN_WIDTH-40,
     fontSize: 30,
-    fontWeight: "bold"
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 30,
+  },
+  warningText: {
+    fontSize: 12,
+    marginTop: 40,
+    marginLeft: 40,
+    marginRight: 40
   }
 });
 

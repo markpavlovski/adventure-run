@@ -38,7 +38,7 @@ class ScrollList extends Component {
           text={track.name}
           index={index}
           key = {index}
-          exploreTrack={this.props.exploreTrack}
+          beginActivity={this.props.beginActivity}
           animateSlide={this.animateSlide}
           setDisplay = {this.setDisplay}
           displaySize = {this.state.displaySize}

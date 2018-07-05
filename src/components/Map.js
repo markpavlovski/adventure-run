@@ -17,8 +17,8 @@ class Map extends Component {
     const tracks = this.props.trackData
     return (
     <View>
-      {/* <BackButton visible={this.state.showTrackDetail} resetView={this.resetView}/>
-      <StartButton visible={this.state.showTrackDetail}/> */}
+      <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/>
+      <StartButton visible={this.state.showActivityUI}/>
       <View>
         <MapView
           provider='google'
@@ -53,7 +53,7 @@ class Map extends Component {
         <ScrollList
           changeMapView={this.changeMapView}
           registerCallback={this.registerCallback}
-          exploreTrack={this.exploreTrack}
+          beginActivity={this.beginActivity}
         />
       </View>
     </View>
@@ -72,6 +72,7 @@ class Map extends Component {
       showScrollList: false,
       showTrackMarkers: true,
       showTrackDetail: false,
+      showActivityUI: false,
       trackId: null
     }
   }
@@ -136,17 +137,28 @@ class Map extends Component {
   registerCallback = (animateSlide) => {
     this.animateSlide = animateSlide
   }
+  //
+  // exploreTrack = trackId => {
+  //   const tracks = this.props.trackData
+  //   const checkPoints = tracks.find(track => track.id === trackId).checkPoints
+  //   this.fitToMarkers(checkPoints)
+  //   this.animateSlide(FULL,NONE)
+  //   this.setShowScrollList(false)
+  //   this.setState({
+  //     showTrackMarkers: false,
+  //     showTrackDetail: true,
+  //     trackId
+  //   })
+  // }
 
-  exploreTrack = trackId => {
+  beginActivity = trackId => {
     const tracks = this.props.trackData
     const checkPoints = tracks.find(track => track.id === trackId).checkPoints
     this.fitToMarkers(checkPoints)
     this.animateSlide(FULL,NONE)
-    this.setShowScrollList(false)
     this.setState({
-      showTrackMarkers: false,
-      showTrackDetail: true,
-      trackId
+      showScrollList: false,
+      showActivityUI: true
     })
   }
 
