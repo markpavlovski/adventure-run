@@ -133,7 +133,7 @@ class Map extends Component {
     const tracks = this.props.trackData
     const checkPoints = tracks.find(track => track.id === trackId).checkPoints
     this.fitToMarkers(checkPoints)
-    this.triggerHideAnimation()
+    this.animateSlide(FULL,NONE)
     this.setShowScrollList(false)
     this.setState({
       showTrackMarkers: false,
