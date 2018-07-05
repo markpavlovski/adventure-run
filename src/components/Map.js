@@ -34,7 +34,7 @@ class Map extends Component {
             { this.state.showTrackMarkers ? tracks.map((track, idx) =>
               <TrackMarker
                 key={idx}
-                triggerShowAnimation={this.triggerShowAnimation}
+                animateSlide={this.animateSlide}
                 {...{track, setShowScrollList: this.setShowScrollList}}
               />
             ) : null }
@@ -63,8 +63,7 @@ class Map extends Component {
     super(props)
     const tracks = this.props.trackData
     this.DISTANCE_THRESHOLD = 10
-    this.triggerShowAnimation = _ => _
-    this.triggerHideAnimation = _ => _
+    this.animateSlide = _ => _
     this.state = {
       location: null,
       region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
@@ -121,14 +120,13 @@ class Map extends Component {
   handleMapPress = () => {
     if (this.state.showScrollList) {
       this.setShowScrollList(false)
-      this.triggerHideAnimation()
+      this.animateSlide(HALF,NONE)
       this.fitToMarkers(this.props.trackData)
     }
   }
 
-  registerCallback = (show,hide) => {
-    this.triggerShowAnimation = show
-    this.triggerHideAnimation = hide
+  registerCallback = (animateSlide) => {
+    this.animateSlide = animateSlide
   }
 
   exploreTrack = trackId => {
@@ -151,13 +149,15 @@ class Map extends Component {
       showTrackDetail: false,
       showScrollList: false
     })
-    // this.fitToMarkers(this.props.trackData)
   }
 
 }
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
+const HALF = 'HALF'
+const NONE = 'NONE'
+const FULL = 'FULL'
 
 
 

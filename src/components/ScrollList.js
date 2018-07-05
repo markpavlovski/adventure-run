@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Animated,Dimensions,ScrollView,StyleSheet,Text, View, Easing } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button } from 'react-native-elements';
+import { Button } from 'react-native-elements'
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures'
 
 
 import { changeActiveScrollItem} from '../actions'
@@ -15,23 +16,24 @@ class ScrollList extends Component {
   }
 
   componentDidMount () {
-    this.props.registerCallback(this.animateMount,this.animateUnmount)
+    this.props.registerCallback(this.animateSlide)
   }
 
-  componentWillUnmount () {
-    console.log('unmounting')
-    this.animateUnmount()
-  }
-
-
-  animateMount = index => {
-    this.animatedValue.setValue(0)
-    this.scrollToIndex(index)
-    this.props.changeMapView(index)
+  animateSlide = (start,stop, index = null) => {
+    const config = {
+      NONE: 0,
+      HALF: HALF_THRESHOLD,
+      FULL: 1
+    }
+    this.animatedValue.setValue(config[start])
+    if (index !== null){
+      this.scrollToIndex(index)
+      this.props.changeMapView(index)
+    }
     Animated.timing(
       this.animatedValue,
       {
-        toValue: 1,
+        toValue: config[stop],
         duration: 300,
         easing: Easing.linear
       }
@@ -39,18 +41,6 @@ class ScrollList extends Component {
     .start()
   }
 
-  animateUnmount = () => {
-    this.animatedValue.setValue(1)
-    Animated.timing(
-      this.animatedValue,
-      {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.linear
-      }
-    )
-    .start()
-  }
 
   scrollToIndex = index => {
     this.scrollView.getNode().scrollTo({
@@ -62,7 +52,7 @@ class ScrollList extends Component {
   render() {
     const marginTop = this.animatedValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [250, 0]
+      outputRange: [MARGIN_TOP, 0]
     })
     return (
       <Animated.View style={{marginTop}}>
@@ -84,7 +74,7 @@ class ScrollList extends Component {
         style={styles.scrollView}
         ref={ref=>(this.scrollView=ref)}
       >
-        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index} exploreTrack={this.props.exploreTrack}/>)}
+        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index} exploreTrack={this.props.exploreTrack} animateSlide={this.animateSlide}/>)}
       </Animated.ScrollView>
     </Animated.View>
 
@@ -97,15 +87,92 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const xOffset = new Animated.Value(0);
 
-const Screen = props => (
+class Screen extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      // myText: 'I\'m ready to get swiped!',
+      gestureName: 'none',
+      // backgroundColor: '#fff',
+      currentDisplay: HALF
+    }
+  }
+
+  onSwipeUp(gestureState) {
+    if (this.state.currentDisplay !== FULL) {
+      this.setState({myText: 'You swiped up!'});
+      this.props.animateSlide(HALF,FULL)
+      this.setState({currentDisplay: FULL})
+    }
+  }
+
+  onSwipeDown(gestureState) {
+    if (this.state.currentDisplay !== HALF) {
+      this.setState({myText: 'You swiped down!'});
+      this.props.animateSlide(FULL,HALF)
+      this.setState({currentDisplay: HALF})
+    }
+  }
+
+  onSwipeLeft(gestureState) {
+    this.setState({myText: 'You swiped left!'});
+  }
+
+  onSwipeRight(gestureState) {
+    this.setState({myText: 'You swiped right!'});
+  }
+
+  onSwipe(gestureName, gestureState) {
+    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+    this.setState({gestureName: gestureName});
+    switch (gestureName) {
+      case SWIPE_UP:
+        // this.setState({backgroundColor: 'red'});
+        break;
+      case SWIPE_DOWN:
+        // this.setState({backgroundColor: 'green'});
+        break;
+      case SWIPE_LEFT:
+        // this.setState({backgroundColor: 'blue'});
+        break;
+      case SWIPE_RIGHT:
+        // this.setState({backgroundColor: 'yellow'});
+        break;
+    }
+  }
+
+  render = () => {
+    const props = this.props
+    const config = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
+    return (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, transitionAnimation(props.index)]}>
         <View style={{
           justifyContent: 'space-around',
-          height: 170,
+          height: 200,
           alignItems: 'center'
         }}>
-          <Text style={styles.text}>{props.text}</Text>
+            <GestureRecognizer
+              onSwipe={(direction, state) => this.onSwipe(direction, state)}
+              onSwipeUp={(state) => this.onSwipeUp(state)}
+              onSwipeDown={(state) => this.onSwipeDown(state)}
+              onSwipeLeft={(state) => this.onSwipeLeft(state)}
+              onSwipeRight={(state) => this.onSwipeRight(state)}
+              config={config}
+              style={{
+                flex: 1,
+                backgroundColor: this.state.backgroundColor
+              }}
+            >
+            {/* <Text>{this.state.myText}</Text>
+            <Text>onSwipe callback received gesture: {this.state.gestureName}</Text> */}
+            <Text style={styles.text}>{props.text}</Text>
+
+          </GestureRecognizer>
           <Button
             title="EXPLORE TRACK"
             loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
@@ -124,7 +191,8 @@ const Screen = props => (
         </View>
       </Animated.View>
     </View>
-)
+)}
+}
 
 
 const transitionAnimation = index => {
@@ -166,10 +234,18 @@ const transitionAnimation = index => {
 };
 
 
+const MARGIN_TOP = 400
+const SMALL_CONTENT_HEIGHT = 150
+const HALF_THRESHOLD = SMALL_CONTENT_HEIGHT/MARGIN_TOP
+const NONE = 'NONE'
+const HALF = 'HALF'
+const FULL = 'FULL'
+
+
 const styles = StyleSheet.create({
   scrollView: {
     flexDirection: "row",
-    marginTop: -250
+    marginTop: -MARGIN_TOP
   },
   scrollPage: {
     width: SCREEN_WIDTH,
@@ -177,7 +253,7 @@ const styles = StyleSheet.create({
   },
   screen: {
     height: 400,
-    padding: 30,
+    // padding: 30,
     justifyContent: "flex-start",
     alignItems: "center",
     borderRadius: 25,

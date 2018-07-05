@@ -24,6 +24,7 @@
     "react-native": "~0.55.2",
     "react-native-elements": "^0.19.1",
     "react-native-fontawesome": "^5.7.0",
+    "react-native-swipe-gestures": "^1.0.2",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
