@@ -1,10 +1,13 @@
 import React, {Component} from "react"
 import { StyleSheet, Text, View, Dimensions } from "react-native"
+import { Constants, Location, Permissions  } from "expo";
 import { Icon } from 'react-native-elements'
+
 import moment from 'moment'
 
 
 import CustomButton from './CustomButton'
+import { getDistance } from '../helpers'
 
 
 class ActivityController extends Component {
@@ -36,12 +39,26 @@ class ActivityController extends Component {
     super()
     this.state = {
       time: 0,
-      speed: 10,
-      pace: 6,
-      inProgress: true
+      speed: (0).toFixed(2),
+      pace: (0).toFixed(2),
+      inProgress: true,
+      location: null,
+      coordinates: []
     }
     this.startTime = null
     this.currentTime = null
+  }
+
+  componentDidMount() {
+    this.setState({startTime: moment()})
+    this.timer = setInterval(()=>{
+      this.setState({currentTime: moment()})
+      this.getLocationAsync()
+    },1000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer)
   }
 
   displayTimer = () => {
@@ -58,27 +75,48 @@ class ActivityController extends Component {
   }
 
   handleStop = () => {
-    console.log('hiii');
     clearInterval(this.timer)
     this.setState({inProgress: false})
+    this.props.displayRunPath(this.state.coordinates)
+    console.log(this.state.coordinates)
   }
 
   handleFinish = () => {
-    console.log('finished!')
     this.props.resetView()
+    this.props.displayRunPath([])
   }
 
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
 
-  componentDidMount() {
-    this.setState({startTime: moment()})
-    this.timer = setInterval(()=>{
-      this.setState({currentTime: moment()})
-    },1000)
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+    this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
+    // console.log(location)
+    this.getCurrentSpeed()
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer)
+  getCurrentSpeed = () => {
+    const coordinates = this.state.coordinates
+    if (coordinates.length > 4) {
+      const sample = coordinates.filter((el,idx,arr) => idx > arr.length - 4)
+      let distance = 0
+      for (let i = 1; i < sample.length; i++){
+        distance += getDistance(sample[i], sample[i-1])
+      }
+      const speed = (distance / 3 * 60 / 1000).toFixed(2)
+      const pace = 60 / speed < 20 ? (60 / speed).toFixed(2) : (0).toFixed(2)
+      this.setState({speed, pace})
+      console.log(sample.length, speed)
+    } else {
+      this.setState({speed: (0).toFixed(2), pace: (0).toFixed(2)})
+    }
   }
+
 
 }
 

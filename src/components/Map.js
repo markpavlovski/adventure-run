@@ -19,7 +19,7 @@ class Map extends Component {
     return (
     <View>
       {/* <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/> */}
-      {this.state.showActivityUI ? <ActivityController resetView={this.resetView}/> : null}
+      {this.state.showActivityUI ? <ActivityController resetView={this.resetView} displayRunPath={this.displayRunPath}/> : null}
       <View>
         <MapView
           provider='google'
@@ -49,6 +49,19 @@ class Map extends Component {
               />
             ) : null }
 
+          {/* RENDER POLYLINE */}
+
+          {
+            this.state.runPath.length 
+            ? <MapView.Polyline
+          		coordinates={this.state.runPath}
+          		strokeColor="#000"
+          		strokeWidth={20}
+        	  />
+            : null
+          }
+
+
         </MapView>
         <ScrollList
           changeMapView={this.changeMapView}
@@ -73,19 +86,20 @@ class Map extends Component {
       showTrackMarkers: true,
       showTrackDetail: false,
       showActivityUI: false,
-      trackId: null
+      trackId: null,
+      runPath: []
     }
   }
 
-  componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      })
-    } else {
-      this.getLocationAsync()
-    }
-  }
+  // componentWillMount() {
+  //   if (Platform.OS === 'android' && !Constants.isDevice) {
+  //     this.setState({
+  //       errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+  //     })
+  //   } else {
+  //     this.getLocationAsync()
+  //   }
+  // }
 
   componentDidMount(){
     setTimeout(() => this.fitToMarkers(this.props.trackData), 100)
@@ -103,16 +117,7 @@ class Map extends Component {
     })
   }
 
-  getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location })
-  }
+
 
   setShowScrollList = bool => {
     this.setState({showScrollList: bool})
@@ -130,7 +135,6 @@ class Map extends Component {
     if (this.state.showScrollList) {
       this.resetView()
       this.animateSlide(HALF,NONE)
-      // this.fitToMarkers(this.props.trackData)
     }
   }
 
@@ -161,7 +165,6 @@ class Map extends Component {
   }
 
   resetView = () => {
-    // this.changeMapView(this.state.trackId)
     this.setState({
       showTrackMarkers: true,
       showTrackDetail: false,
@@ -169,6 +172,12 @@ class Map extends Component {
       showActivityUI: false,
     })
     this.fitToMarkers(this.props.trackData)
+  }
+
+
+  displayRunPath = coordinates => {
+    this.setState({runPath: coordinates})
+    console.log('displayRunPath executed.');
   }
 
 }
