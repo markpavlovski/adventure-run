@@ -17,8 +17,8 @@ class Map extends Component {
     const tracks = this.props.trackData
     return (
     <View>
-      <BackButton visible={this.state.showTrackDetail} resetView={this.resetView}/>
-      <StartButton visible={this.state.showTrackDetail}/>
+      {/* <BackButton visible={this.state.showTrackDetail} resetView={this.resetView}/>
+      <StartButton visible={this.state.showTrackDetail}/> */}
       <View>
         <MapView
           provider='google'
@@ -35,6 +35,7 @@ class Map extends Component {
               <TrackMarker
                 key={idx}
                 animateSlide={this.animateSlide}
+                showCheckpoints = {this.showCheckpoints}
                 {...{track, setShowScrollList: this.setShowScrollList}}
               />
             ) : null }
@@ -91,7 +92,14 @@ class Map extends Component {
 
 
   fitToMarkers = (locations) => {
-    this.mapView.fitToCoordinates(locations, {edgePadding: { top: 50, right: 50, bottom: 50, left: 50 }})
+    this.mapView.fitToCoordinates(locations, {
+      edgePadding: {
+        top: 50,
+        right: 50,
+        bottom: 150,
+        left: 50
+      }
+    })
   }
 
   getLocationAsync = async () => {
@@ -112,14 +120,14 @@ class Map extends Component {
 
   changeMapView = (trackIndex) => {
     const tracks = this.props.trackData
-    const focusLocation = tracks[trackIndex]
-    const latitude = focusLocation.latitude - 0.009
-    this.mapView.animateToRegion({...focusLocation, latitude }, 500)
+    const checkPoints = tracks[trackIndex].checkPoints
+    this.showCheckpoints(trackIndex)
+    this.fitToMarkers(checkPoints)
   }
 
   handleMapPress = () => {
     if (this.state.showScrollList) {
-      this.setShowScrollList(false)
+      this.resetView()
       this.animateSlide(HALF,NONE)
       this.fitToMarkers(this.props.trackData)
     }
@@ -135,6 +143,17 @@ class Map extends Component {
     this.fitToMarkers(checkPoints)
     this.animateSlide(FULL,NONE)
     this.setShowScrollList(false)
+    this.setState({
+      showTrackMarkers: false,
+      showTrackDetail: true,
+      trackId
+    })
+  }
+
+  showCheckpoints = trackId => {
+    const tracks = this.props.trackData
+    const checkPoints = tracks.find(track => track.id === trackId).checkPoints
+    this.fitToMarkers(checkPoints)
     this.setState({
       showTrackMarkers: false,
       showTrackDetail: true,

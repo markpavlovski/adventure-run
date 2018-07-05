@@ -5,12 +5,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 
-const TrackMarker = ({track, setShowScrollList, animateSlide}) => (
+const TrackMarker = ({track, setShowScrollList, animateSlide, showCheckpoints}) => (
   <MapView.Marker
     coordinate={track}
     onPress = {()=>{
       setShowScrollList(true)
       animateSlide(NONE,HALF,track.id)
+      showCheckpoints(track.id)
     }}
   >
     <MapView.Callout tooltip={true} />
