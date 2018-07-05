@@ -13,10 +13,17 @@ class ScrollList extends Component {
   constructor (props) {
     super(props)
     this.animatedValue = new Animated.Value(0)
+    this.state = {
+      displaySize: HALF
+    }
   }
 
   componentDidMount () {
     this.props.registerCallback(this.animateSlide)
+  }
+
+  setDisplay = displaySize => {
+    this.setState({displaySize})
   }
 
   animateSlide = (start,stop, index = null) => {
@@ -39,6 +46,7 @@ class ScrollList extends Component {
       }
     )
     .start()
+    return config[stop]
   }
 
 
@@ -74,7 +82,15 @@ class ScrollList extends Component {
         style={styles.scrollView}
         ref={ref=>(this.scrollView=ref)}
       >
-        {this.props.trackData.map((track, index) => <Screen text={track.name} index={index} key = {index} exploreTrack={this.props.exploreTrack} animateSlide={this.animateSlide}/>)}
+        {this.props.trackData.map((track, index) => <Screen
+          text={track.name}
+          index={index}
+          key = {index}
+          exploreTrack={this.props.exploreTrack}
+          animateSlide={this.animateSlide}
+          setDisplay = {this.setDisplay}
+          displaySize = {this.state.displaySize}
+        />)}
       </Animated.ScrollView>
     </Animated.View>
 
@@ -89,58 +105,7 @@ const xOffset = new Animated.Value(0);
 
 class Screen extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      // myText: 'I\'m ready to get swiped!',
-      gestureName: 'none',
-      // backgroundColor: '#fff',
-      currentDisplay: HALF
-    }
-  }
 
-  onSwipeUp(gestureState) {
-    if (this.state.currentDisplay !== FULL) {
-      this.setState({myText: 'You swiped up!'});
-      this.props.animateSlide(HALF,FULL)
-      this.setState({currentDisplay: FULL})
-    }
-  }
-
-  onSwipeDown(gestureState) {
-    if (this.state.currentDisplay !== HALF) {
-      this.setState({myText: 'You swiped down!'});
-      this.props.animateSlide(FULL,HALF)
-      this.setState({currentDisplay: HALF})
-    }
-  }
-
-  onSwipeLeft(gestureState) {
-    this.setState({myText: 'You swiped left!'});
-  }
-
-  onSwipeRight(gestureState) {
-    this.setState({myText: 'You swiped right!'});
-  }
-
-  onSwipe(gestureName, gestureState) {
-    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
-    this.setState({gestureName: gestureName});
-    switch (gestureName) {
-      case SWIPE_UP:
-        // this.setState({backgroundColor: 'red'});
-        break;
-      case SWIPE_DOWN:
-        // this.setState({backgroundColor: 'green'});
-        break;
-      case SWIPE_LEFT:
-        // this.setState({backgroundColor: 'blue'});
-        break;
-      case SWIPE_RIGHT:
-        // this.setState({backgroundColor: 'yellow'});
-        break;
-    }
-  }
 
   render = () => {
     const props = this.props
@@ -157,11 +122,11 @@ class Screen extends Component {
           alignItems: 'center'
         }}>
             <GestureRecognizer
-              onSwipe={(direction, state) => this.onSwipe(direction, state)}
+              // onSwipe={(direction, state) => this.onSwipe(direction, state)}
               onSwipeUp={(state) => this.onSwipeUp(state)}
               onSwipeDown={(state) => this.onSwipeDown(state)}
-              onSwipeLeft={(state) => this.onSwipeLeft(state)}
-              onSwipeRight={(state) => this.onSwipeRight(state)}
+              // onSwipeLeft={(state) => this.onSwipeLeft(state)}
+              // onSwipeRight={(state) => this.onSwipeRight(state)}
               config={config}
               style={{
                 flex: 1,
@@ -170,10 +135,10 @@ class Screen extends Component {
             >
             {/* <Text>{this.state.myText}</Text>
             <Text>onSwipe callback received gesture: {this.state.gestureName}</Text> */}
-            <Text style={styles.text}>{props.text}</Text>
+            <Text style={styles.text} onPress={this.handleAnimateSlide}>{props.text}</Text>
 
           </GestureRecognizer>
-          <Button
+          {/* <Button
             title="EXPLORE TRACK"
             loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
             // titleStyle={{ fontWeight: "700", fontSize: 70 }}
@@ -187,11 +152,60 @@ class Screen extends Component {
               borderRadius: 5
             }}
             onPress={()=>props.exploreTrack(props.index)}
-          />
+          /> */}
         </View>
       </Animated.View>
     </View>
-)}
+  )}
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      gestureName: 'none',
+    }
+  }
+
+  handleAnimateSlide = () => {
+    console.log(this.props.displaySize)
+  }
+
+  onSwipeUp(gestureState) {
+    // this.setState({myText: 'You swiped up!'});
+    this.props.animateSlide(HALF,FULL)
+    this.props.setDisplay(FULL)
+    // this.setState({currentDisplay: FULL})
+    console.log('up')
+  }
+
+  onSwipeDown(gestureState) {
+    // this.setState({myText: 'You swiped down!'});
+    this.props.animateSlide(FULL,HALF)
+    this.props.setDisplay(HALF)
+    console.log('down')
+  }
+
+  // onSwipeLeft(gestureState) {
+  //   this.setState({myText: 'You swiped left!'});
+  // }
+  //
+  // onSwipeRight(gestureState) {
+  //   this.setState({myText: 'You swiped right!'});
+  // }
+  //
+  // onSwipe(gestureName, gestureState) {
+  //   const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+  //   switch (gestureName) {
+  //     case SWIPE_UP:
+  //       break;
+  //     case SWIPE_DOWN:
+  //       break;
+  //     case SWIPE_LEFT:
+  //       break;
+  //     case SWIPE_RIGHT:
+  //       break;
+  //   }
+  // }
+
 }
 
 
