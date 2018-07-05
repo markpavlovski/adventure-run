@@ -10,6 +10,7 @@ import CheckpointMarker from './CheckpointMarker'
 import ScrollList from './ScrollList'
 import BackButton from './BackButton'
 import StartButton from './StartButton'
+import ActivityController from './ActivityController'
 
 class Map extends Component {
 
@@ -17,14 +18,13 @@ class Map extends Component {
     const tracks = this.props.trackData
     return (
     <View>
-      <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/>
-      <StartButton visible={this.state.showActivityUI}/>
+      {/* <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/> */}
+      {this.state.showActivityUI ? <ActivityController resetView={this.resetView}/> : null}
       <View>
         <MapView
           provider='google'
           style={{height: SCREEN_HEIGHT-50}}
           showsUserLocation
-          // showsMyLocationButton
           initialRegion={this.state.region}
           ref={ref => { this.mapView = ref }}
           onRegionChange	= {region => this.setState({region})}
@@ -130,26 +130,13 @@ class Map extends Component {
     if (this.state.showScrollList) {
       this.resetView()
       this.animateSlide(HALF,NONE)
-      this.fitToMarkers(this.props.trackData)
+      // this.fitToMarkers(this.props.trackData)
     }
   }
 
   registerCallback = (animateSlide) => {
     this.animateSlide = animateSlide
   }
-  //
-  // exploreTrack = trackId => {
-  //   const tracks = this.props.trackData
-  //   const checkPoints = tracks.find(track => track.id === trackId).checkPoints
-  //   this.fitToMarkers(checkPoints)
-  //   this.animateSlide(FULL,NONE)
-  //   this.setShowScrollList(false)
-  //   this.setState({
-  //     showTrackMarkers: false,
-  //     showTrackDetail: true,
-  //     trackId
-  //   })
-  // }
 
   beginActivity = trackId => {
     const tracks = this.props.trackData
@@ -174,12 +161,14 @@ class Map extends Component {
   }
 
   resetView = () => {
-    this.changeMapView(this.state.trackId)
+    // this.changeMapView(this.state.trackId)
     this.setState({
       showTrackMarkers: true,
       showTrackDetail: false,
-      showScrollList: false
+      showScrollList: false,
+      showActivityUI: false,
     })
+    this.fitToMarkers(this.props.trackData)
   }
 
 }
