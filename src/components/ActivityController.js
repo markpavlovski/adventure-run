@@ -1,14 +1,16 @@
 import React, {Component} from "react"
+import { bindActionCreators } from 'redux'
 import {connect} from 'react-redux'
 import { StyleSheet, Text, View, Dimensions } from "react-native"
 import { Constants, Location, Permissions, Audio  } from "expo";
 import { Icon } from 'react-native-elements'
-
 import moment from 'moment'
 
 
 import CustomButton from './CustomButton'
 import { getDistance } from '../helpers'
+import {updateActiveCheckpoints} from '../actions'
+
 
 
 class ActivityController extends Component {
@@ -55,11 +57,8 @@ class ActivityController extends Component {
       STOP: require('../assets/stop.wav'),
       SUBMIT: require('../assets/start.wav')
     }
-    this.checkpoints = [...props.trackData
-      .find(track => track.id === props.trackId)
-      .checkPoints
+    this.checkpoints = props.activeCheckpoints
       .map((cp,idx) => ({...cp, id: idx, visited: false, timeStamp: null, distance: 0}))
-    ]
     // console.log(this.checkpoints)
     // console.log('!!!!', props.trackId)
   }
@@ -150,8 +149,8 @@ class ActivityController extends Component {
 
     this.checkpoints = this.checkpoints.map(cp => {
       const distance = getDistance(cp, this.state.location.coords)
-      if (distance < 50000 && !cp.visited) {
-        this.handleCheckpointVisit(cp)
+      if (distance < 2380 && !cp.visited) {
+        return this.handleCheckpointVisit(cp)
       }
       return cp
     })
@@ -160,11 +159,15 @@ class ActivityController extends Component {
     if (visited.length === this.checkpoints.length && !this.state.completed) {
       this.handleCompletion()
     }
+
+    this.props.updateActiveCheckpoints(this.checkpoints)
+
   }
 
   handleCheckpointVisit = (checkpoint) => {
-    checkpoint.timeStamp = new Date()
-    checkpoint.visited = true
+    // checkpoint.timeStamp = new Date()
+    // checkpoint.visited = true
+    return {...checkpoint, timeStamp: new Date(), visited: true}
   }
 
   handleCompletion = () => {
@@ -196,5 +199,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = ({trackData}) => ({trackData})
-export default connect(mapStateToProps)(ActivityController)
+const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
+const mapStateToProps = ({trackData, activeCheckpoints}) => ({trackData, activeCheckpoints})
+export default connect(mapStateToProps,mapDispatchToProps)(ActivityController)

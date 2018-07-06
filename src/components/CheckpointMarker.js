@@ -11,11 +11,18 @@ const CheckpointMarker = ({checkPoint, idx, checkPoints, location, colorId}) => 
   else if (idx === checkPoints.length - 1) title = 'Finish'
   else title = `Checkpoint ${idx}`
   return (
+  checkPoint.visited ?
   <MapView.Marker
     coordinate={checkPoint}
     title={title}
     description={`${getDistance(location.coords, checkPoint).toFixed(0)} meters away`}
-    pinColor={colorId ? 'blue' : 'red'}
+    pinColor= 'blue'
+  />
+  :
+  <MapView.Marker
+    coordinate={checkPoint}
+    title={title}
+    description={`${getDistance(location.coords, checkPoint).toFixed(0)} meters away`}
   />
 )}
 
