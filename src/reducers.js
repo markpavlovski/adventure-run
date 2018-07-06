@@ -1,12 +1,13 @@
 import { combineReducers } from 'redux'
 
-import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM } from './actions'
+import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, UPDATE_ACTIVE_CHECKPOINTS } from './actions'
 
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
 const INITIAL_PAGE = 2
 const INITIAL_SCROLL_ITEM = 0
+
 
 const GREEN_LAKE = [
   '47.68149, -122.32894',
@@ -107,6 +108,8 @@ const INITIAL_TRACK_DATA = [
   },
 ]
 
+INITIAL_ACTIVE_CHECKPOINTS = []
+
 
 const activePage = (state = INITIAL_PAGE, action) => {
   switch(action.type){
@@ -126,5 +129,12 @@ const trackData = (state = INITIAL_TRACK_DATA, action) => {
   return state
 }
 
+const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
+  switch(action.type){
+    case UPDATE_ACTIVE_CHECKPOINTS: return action.payload
+    default: return state
+  }
+}
 
-export default combineReducers({ activePage, activeScrollItem, trackData })
+
+export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints })

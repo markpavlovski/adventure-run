@@ -45,6 +45,7 @@ class ActivityController extends Component {
       inProgress: true,
       location: null,
       coordinates: [],
+      completed: false
     }
     this.startTime = null
     this.currentTime = null
@@ -57,7 +58,7 @@ class ActivityController extends Component {
     this.checkpoints = [...props.trackData
       .find(track => track.id === props.trackId)
       .checkPoints
-      .map((cp,idx) => ({...cp, id: idx, visited: false, timeStamp: null}))
+      .map((cp,idx) => ({...cp, id: idx, visited: false, timeStamp: null, distance: 0}))
     ]
     // console.log(this.checkpoints)
     // console.log('!!!!', props.trackId)
@@ -113,7 +114,7 @@ class ActivityController extends Component {
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
     this.getCurrentSpeed()
-    this.handleCheckpointVisit()
+    this.examineCheckpoints()
   }
 
   getCurrentSpeed = () => {
@@ -144,19 +145,32 @@ class ActivityController extends Component {
     }
   }
 
-  handleCheckpointVisit = () => {
-    this.checkpoints.map(cp => {
-      console.log(cp.id)
+  examineCheckpoints = () => {
+    console.log(this.state.completed)
+
+    this.checkpoints = this.checkpoints.map(cp => {
+      const distance = getDistance(cp, this.state.location.coords)
+      if (distance < 50000 && !cp.visited) {
+        this.handleCheckpointVisit(cp)
+      }
+      return cp
     })
 
-    // const newCheckpoints = this.state.checkpoints.map(checkpoint => {
-    //   const distance = this.getDistance(checkpoint, this.state.location.coords)
-    //   if (!checkpoint.visited && distance < this.DISTANCE_THRESHOLD) {
-    //     checkpoint = {...checkpoint, visited:true}
-    //   }
-    //   return checkpoint
-    // })
-    // this.setState({checkpoints: newCheckpoints})
+    const visited = this.checkpoints.filter(cp => cp.visited)
+    if (visited.length === this.checkpoints.length && !this.state.completed) {
+      this.handleCompletion()
+    }
+  }
+
+  handleCheckpointVisit = (checkpoint) => {
+    checkpoint.timeStamp = new Date()
+    checkpoint.visited = true
+  }
+
+  handleCompletion = () => {
+    this.setState({completed: true})
+    console.log('congrats!!')
+    this.props.setShowCompleted(true)
   }
 
 }

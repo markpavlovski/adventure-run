@@ -8,7 +8,7 @@ import {getDistance} from '../helpers'
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
 import ScrollList from './ScrollList'
-import BackButton from './BackButton'
+import CompletedButton from './CompletedButton'
 import StartButton from './StartButton'
 import ActivityController from './ActivityController'
 
@@ -18,12 +18,13 @@ class Map extends Component {
     const tracks = this.props.trackData
     return (
     <View>
-      {/* <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/> */}
+      <CompletedButton visible={this.state.showCompleted} resetView={this.resetView}/>
       {this.state.showActivityUI
         ? <ActivityController
             resetView={this.resetView}
             displayRunPath={this.displayRunPath}
             trackId={this.state.trackId}
+            setShowCompleted = {this.setShowCompleted}
           />
         : null}
       <View>
@@ -92,20 +93,11 @@ class Map extends Component {
       showTrackMarkers: true,
       showTrackDetail: false,
       showActivityUI: false,
+      showCompleted: false,
       trackId: null,
       runPath: []
     }
   }
-
-  // componentWillMount() {
-  //   if (Platform.OS === 'android' && !Constants.isDevice) {
-  //     this.setState({
-  //       errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-  //     })
-  //   } else {
-  //     this.getLocationAsync()
-  //   }
-  // }
 
   componentDidMount(){
     setTimeout(() => this.fitToMarkers(this.props.trackData), 100)
@@ -202,6 +194,10 @@ class Map extends Component {
     }
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
     this.setState({ location })
+  }
+
+  setShowCompleted = (bool) => {
+    this.setState({showCompleted: bool})
   }
 
 }
