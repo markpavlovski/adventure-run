@@ -1,6 +1,7 @@
 import React, {Component} from "react"
+import {connect} from 'react-redux'
 import { StyleSheet, Text, View, Dimensions } from "react-native"
-import { Constants, Location, Permissions  } from "expo";
+import { Constants, Location, Permissions, Audio  } from "expo";
 import { Icon } from 'react-native-elements'
 
 import moment from 'moment'
@@ -35,18 +36,31 @@ class ActivityController extends Component {
   )
   }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       time: 0,
       speed: (0).toFixed(2),
       pace: (0).toFixed(2),
       inProgress: true,
       location: null,
-      coordinates: []
+      coordinates: [],
     }
     this.startTime = null
     this.currentTime = null
+    this.sounds = {
+      START: require('../assets/start.wav'),
+      CHECKPOINT: require('../assets/checkpoint.mp3'),
+      STOP: require('../assets/stop.wav'),
+      SUBMIT: require('../assets/start.wav')
+    }
+    this.checkpoints = [...props.trackData
+      .find(track => track.id === props.trackId)
+      .checkPoints
+      .map((cp,idx) => ({...cp, id: idx, visited: false, timeStamp: null}))
+    ]
+    // console.log(this.checkpoints)
+    // console.log('!!!!', props.trackId)
   }
 
   componentDidMount() {
@@ -55,6 +69,7 @@ class ActivityController extends Component {
       this.setState({currentTime: moment()})
       this.getLocationAsync()
     },1000)
+    this.playSound(this.sounds.START)
   }
 
   componentWillUnmount() {
@@ -78,11 +93,13 @@ class ActivityController extends Component {
     clearInterval(this.timer)
     this.setState({inProgress: false})
     this.props.displayRunPath(this.state.coordinates)
+    this.playSound(this.sounds.STOP)
   }
 
   handleFinish = () => {
     this.props.resetView()
     this.props.displayRunPath([])
+    this.playSound(this.sounds.SUBMIT)
   }
 
   getLocationAsync = async () => {
@@ -90,12 +107,13 @@ class ActivityController extends Component {
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
-      });
+      })
     }
 
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
     this.getCurrentSpeed()
+    this.handleCheckpointVisit()
   }
 
   getCurrentSpeed = () => {
@@ -114,8 +132,36 @@ class ActivityController extends Component {
     }
   }
 
+  playSound = async (sound) => {
+    const soundObject = new Audio.Sound();
+    try {
+      await soundObject.loadAsync(sound);
+      await soundObject.playAsync();
+      await console.log('playing')
+      // Your sound is playing!
+    } catch (error) {
+      // An error occurred!
+    }
+  }
+
+  handleCheckpointVisit = () => {
+    this.checkpoints.map(cp => {
+      console.log(cp.id)
+    })
+
+    // const newCheckpoints = this.state.checkpoints.map(checkpoint => {
+    //   const distance = this.getDistance(checkpoint, this.state.location.coords)
+    //   if (!checkpoint.visited && distance < this.DISTANCE_THRESHOLD) {
+    //     checkpoint = {...checkpoint, visited:true}
+    //   }
+    //   return checkpoint
+    // })
+    // this.setState({checkpoints: newCheckpoints})
+  }
 
 }
+
+
 
 
 
@@ -136,5 +182,5 @@ const styles = StyleSheet.create({
   }
 })
 
-
-export default ActivityController
+const mapStateToProps = ({trackData}) => ({trackData})
+export default connect(mapStateToProps)(ActivityController)

@@ -19,7 +19,13 @@ class Map extends Component {
     return (
     <View>
       {/* <BackButton visible={this.state.showActivityUI} resetView={this.resetView}/> */}
-      {this.state.showActivityUI ? <ActivityController resetView={this.resetView} displayRunPath={this.displayRunPath}/> : null}
+      {this.state.showActivityUI
+        ? <ActivityController
+            resetView={this.resetView}
+            displayRunPath={this.displayRunPath}
+            trackId={this.state.trackId}
+          />
+        : null}
       <View>
         <MapView
           provider='google'
