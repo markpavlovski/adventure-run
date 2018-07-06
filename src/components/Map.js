@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions, TouchableHighlight } from 'react-native'
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
+import {updateActiveCheckpoints} from '../actions'
 
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
@@ -11,6 +13,7 @@ import ScrollList from './ScrollList'
 import CompletedButton from './CompletedButton'
 import StartButton from './StartButton'
 import ActivityController from './ActivityController'
+
 
 class Map extends Component {
 
@@ -48,7 +51,7 @@ class Map extends Component {
             ) : null }
 
           {/*  RENDER CHECKPOINTS */}
-            { this.state.showTrackDetail ? tracks.find(track => track.id === this.state.trackId).checkPoints.map((checkPoint, idx, checkPoints) =>
+            { this.state.showTrackDetail ? this.props.activeCheckpoints.map((checkPoint, idx, checkPoints) =>
               <CheckpointMarker
                 key={idx}
                 {...{checkPoint, idx, checkPoints}}
@@ -161,6 +164,7 @@ class Map extends Component {
   showCheckpoints = trackId => {
     const tracks = this.props.trackData
     const checkPoints = tracks.find(track => track.id === trackId).checkPoints
+    this.props.updateActiveCheckpoints(checkPoints)
     this.fitToMarkers(checkPoints)
     this.setState({
       showTrackMarkers: false,
@@ -209,6 +213,6 @@ const NONE = 'NONE'
 const FULL = 'FULL'
 
 
-
-const mapStateToProps = ({activePage, activeScrollItem, trackData}) => ({activePage, activeScrollItem, trackData})
-export default connect(mapStateToProps)(Map)
+const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
+const mapStateToProps = ({activePage, activeScrollItem, trackData, activeCheckpoints}) => ({activePage, activeScrollItem, trackData,activeCheckpoints})
+export default connect(mapStateToProps, mapDispatchToProps)(Map)
