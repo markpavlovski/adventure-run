@@ -78,7 +78,6 @@ class ActivityController extends Component {
     clearInterval(this.timer)
     this.setState({inProgress: false})
     this.props.displayRunPath(this.state.coordinates)
-    console.log(this.state.coordinates)
   }
 
   handleFinish = () => {
@@ -96,7 +95,6 @@ class ActivityController extends Component {
 
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
     this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
-    // console.log(location)
     this.getCurrentSpeed()
   }
 
@@ -111,7 +109,6 @@ class ActivityController extends Component {
       const speed = (distance / 3 * 60 / 1000).toFixed(2)
       const pace = 60 / speed < 20 ? (60 / speed).toFixed(2) : (0).toFixed(2)
       this.setState({speed, pace})
-      console.log(sample.length, speed)
     } else {
       this.setState({speed: (0).toFixed(2), pace: (0).toFixed(2)})
     }

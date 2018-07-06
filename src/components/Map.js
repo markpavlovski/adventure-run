@@ -41,18 +41,18 @@ class Map extends Component {
             ) : null }
 
           {/*  RENDER CHECKPOINTS */}
-
             { this.state.showTrackDetail ? tracks.find(track => track.id === this.state.trackId).checkPoints.map((checkPoint, idx, checkPoints) =>
               <CheckpointMarker
                 key={idx}
                 {...{checkPoint, idx, checkPoints}}
+                location={this.state.location}
               />
             ) : null }
 
           {/* RENDER POLYLINE */}
 
           {
-            this.state.runPath.length 
+            this.state.runPath.length
             ? <MapView.Polyline
           		coordinates={this.state.runPath}
           		strokeColor="#000"
@@ -103,6 +103,13 @@ class Map extends Component {
 
   componentDidMount(){
     setTimeout(() => this.fitToMarkers(this.props.trackData), 100)
+    console.log('mounter');
+    this.locationTracker = setInterval(this.getLocationAsync,1000)
+  }
+
+
+  componentWillUnmount() {
+    clearInterval(this.locationTracker)
   }
 
 
@@ -178,6 +185,17 @@ class Map extends Component {
   displayRunPath = coordinates => {
     this.setState({runPath: coordinates})
     console.log('displayRunPath executed.');
+  }
+
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      })
+    }
+    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+    this.setState({ location })
   }
 
 }
