@@ -149,7 +149,7 @@ class ActivityController extends Component {
 
     this.checkpoints = this.checkpoints.map(cp => {
       const distance = getDistance(cp, this.state.location.coords)
-      if (distance < 2380 && !cp.visited) {
+      if (distance < 20 && !cp.visited) {
         return this.handleCheckpointVisit(cp)
       }
       return cp
@@ -165,8 +165,7 @@ class ActivityController extends Component {
   }
 
   handleCheckpointVisit = (checkpoint) => {
-    // checkpoint.timeStamp = new Date()
-    // checkpoint.visited = true
+    this.playSound(this.sounds.STOP)
     return {...checkpoint, timeStamp: new Date(), visited: true}
   }
 
