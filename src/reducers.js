@@ -1,5 +1,6 @@
+import { AsyncStorage } from 'react-native'
 import { combineReducers } from 'redux'
-
+import { request } from './helpers'
 import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, UPDATE_ACTIVE_CHECKPOINTS } from './actions'
 
 
@@ -7,6 +8,7 @@ const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
 const INITIAL_PAGE = 2
 const INITIAL_SCROLL_ITEM = 0
+
 
 
 const GREEN_LAKE = [
@@ -109,11 +111,26 @@ const INITIAL_TRACK_DATA = [
 ]
 
 INITIAL_ACTIVE_CHECKPOINTS = []
-
+//
+// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTMxMDA5MzAxfQ.m3QJX6UgDNcaidopvMUPOKZoU5S72wInoVTzYqqOO5I'
+// AsyncStorage.setItem('token', token)
+// .then()
 
 const activePage = (state = INITIAL_PAGE, action) => {
   switch(action.type){
-    case CHANGE_ACTIVE_PAGE: return action.payload
+    case CHANGE_ACTIVE_PAGE: {
+      console.log('iopioioio');
+      AsyncStorage.getItem('token')
+      .then(token => {
+        console.log(token)
+        return request('/tracks')
+        .then(tracks => {
+          console.log(tracks.data.data)
+        })
+      })
+
+      return action.payload
+    }
     default: return state
   }
 }
@@ -135,6 +152,11 @@ const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
     default: return state
   }
 }
+
+
+
+
+
 
 
 export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints })
