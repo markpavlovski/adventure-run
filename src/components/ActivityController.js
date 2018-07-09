@@ -18,26 +18,26 @@ import {updateActiveCheckpoints} from '../actions'
 class ActivityController extends Component {
 
   render(){
-  const SCREEN_HEIGHT = Dimensions.get("window").height
-  const CONTAINER_HEIGHT = 150
-  const MARGIN_TOP = SCREEN_HEIGHT - CONTAINER_HEIGHT - 80
-  return (
-    <View style={{
-      backgroundColor: 'rgba(55,130,135,.9)',
-      height: CONTAINER_HEIGHT,
-      margin: 20,
-      marginTop: MARGIN_TOP,
-      marginBottom: - CONTAINER_HEIGHT - MARGIN_TOP,
-      zIndex: 99,
-      borderRadius: 30,
-      justifyContent: 'center',
-    }}
-    >
-      <Text style={styles.time}>{this.displayTimer()}</Text>
-      <Text style={styles.text}>{`${this.state.speed} km/h, ${this.state.pace} min/km`}</Text>
-      {this.state.inProgress ? <CustomButton text={'STOP'} action={this.handleStop}/> : <CustomButton text={'FINISH'} action={this.handleFinish}/>}
-    </View>
-  )
+    const SCREEN_HEIGHT = Dimensions.get("window").height
+    const CONTAINER_HEIGHT = 150
+    const MARGIN_TOP = SCREEN_HEIGHT - CONTAINER_HEIGHT - 80
+    return (
+      <View style={{
+        backgroundColor: 'rgba(55,130,135,.9)',
+        height: CONTAINER_HEIGHT,
+        margin: 20,
+        marginTop: MARGIN_TOP,
+        marginBottom: - CONTAINER_HEIGHT - MARGIN_TOP,
+        zIndex: 99,
+        borderRadius: 30,
+        justifyContent: 'center',
+      }}
+      >
+        <Text style={styles.time}>{this.displayTimer()}</Text>
+        <Text style={styles.text}>{`${this.state.speed} km/h, ${this.state.pace} min/km`}</Text>
+        {this.state.inProgress ? <CustomButton text={'STOP'} action={this.handleStop}/> : <CustomButton text={'FINISH'} action={this.handleFinish}/>}
+      </View>
+    )
   }
 
   constructor(props) {
@@ -50,6 +50,8 @@ class ActivityController extends Component {
       location: null,
       completed: false,
     }
+
+    this.CHECKPOINT_COLLISION_RADIUS = 15
     this.coordinates = []
     this.distance = 0
     this.startTime = null
@@ -108,7 +110,6 @@ class ActivityController extends Component {
         checkpoint_time
       }
     })
-    // console.log(times)
     console.log('final distance', this.distance)
     const distance = (this.distance/1000).toFixed(2)
     const track_id = this.checkpoints[0].track_id
@@ -121,6 +122,7 @@ class ActivityController extends Component {
     }
     request('/runs','post',runData)
     this.playSound(this.sounds.SUBMIT)
+    this.props.setShowCompleted(false)
   }
 
   getLocationAsync = async () => {
@@ -172,7 +174,7 @@ class ActivityController extends Component {
 
     this.checkpoints = this.checkpoints.map(cp => {
       const distance = getDistance(cp, this.state.location.coords)
-      if (distance < 5000 && !cp.visited) {
+      if (distance < this.CHECKPOINT_COLLISION_RADIUS && !cp.visited) {
         return this.handleCheckpointVisit(cp)
       }
       return cp
