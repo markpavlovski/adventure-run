@@ -32,24 +32,10 @@ export const changeActiveScrollItem = itemIndex => (
 
 export const updateActiveCheckpoints = (checkpoints) => (
   dispatch => {
-    request('/tracks/1/checkpoints')
-    .then(response => {
-      console.log(response.data.data)
-      const checkpoints = response.data.data
-      // .map( checkpoint => ({...checkpoint,
-      //   //   latitude: track.latlong.split(', ')[0]*1,
-      // }))
-      .map(checkpoint=>({...checkpoint,
-        latitude: checkpoint.latlong.split(', ')[0]*1,
-        longitude: checkpoint.latlong.split(', ')[1]*1,
-      }))
-      dispatch({
-        type: UPDATE_ACTIVE_CHECKPOINTS,
-        payload: checkpoints
-      })
+    dispatch({
+      type: UPDATE_ACTIVE_CHECKPOINTS,
+      payload: checkpoints
     })
-    .catch(()=>console.log('checkpoints not found'))
-
   }
 )
 

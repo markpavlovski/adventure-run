@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions, Touch
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
-import {updateActivecheckpoints} from '../actions'
+import {updateActiveCheckpoints} from '../actions'
 
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
@@ -45,13 +45,13 @@ class Map extends Component {
               <TrackMarker
                 key={idx}
                 animateSlide={this.animateSlide}
-                showcheckpoints = {this.showcheckpoints}
+                showCheckpoints = {this.showCheckpoints}
                 {...{track, setShowScrollList: this.setShowScrollList}}
               />
             ) : null }
 
           {/*  RENDER checkpoints */}
-            { this.state.showTrackDetail ? this.props.activecheckpoints.map((checkpoint, idx, checkpoints) =>
+            { this.state.showTrackDetail ? this.props.activeCheckpoints.map((checkpoint, idx, checkpoints) =>
               <CheckpointMarker
                 key={idx}
                 {...{checkpoint, idx, checkpoints}}
@@ -140,7 +140,7 @@ class Map extends Component {
   changeMapView = (trackIndex) => {
     const tracks = this.props.trackData
     const checkpoints = tracks[trackIndex].checkpoints
-    this.showcheckpoints(trackIndex)
+    this.showCheckpoints(trackIndex)
     this.fitToMarkers(checkpoints)
   }
 
@@ -166,10 +166,10 @@ class Map extends Component {
     })
   }
 
-  showcheckpoints = trackId => {
+  showCheckpoints = trackId => {
     const tracks = this.props.trackData
     const checkpoints = tracks.find(track => track.id === trackId).checkpoints
-    this.props.updateActivecheckpoints(checkpoints)
+    this.props.updateActiveCheckpoints(checkpoints)
     this.fitToMarkers(checkpoints)
     this.setState({
       showTrackMarkers: false,
@@ -218,6 +218,6 @@ const NONE = 'NONE'
 const FULL = 'FULL'
 
 
-const mapDispatchToProps = dispatch => bindActionCreators({updateActivecheckpoints}, dispatch)
-const mapStateToProps = ({activePage, activeScrollItem, trackData, activecheckpoints}) => ({activePage, activeScrollItem, trackData,activecheckpoints})
+const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
+const mapStateToProps = ({activePage, activeScrollItem, trackData, activeCheckpoints}) => ({activePage, activeScrollItem, trackData, activeCheckpoints})
 export default connect(mapStateToProps, mapDispatchToProps)(Map)

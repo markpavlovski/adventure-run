@@ -5,24 +5,24 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getDistance } from '../helpers'
 
-const CheckpointMarker = ({checkPoint, idx, checkPoints, location, colorId}) => {
+const CheckpointMarker = ({checkpoint, idx, checkpoints, location, colorId}) => {
   let title = null
   if (idx === 0) title = 'Start'
-  else if (idx === checkPoints.length - 1) title = 'Finish'
+  else if (idx === checkpoints.length - 1) title = 'Finish'
   else title = `Checkpoint ${idx}`
   return (
-  checkPoint.visited ?
+  checkpoint.visited ?
   <MapView.Marker
-    coordinate={checkPoint}
+    coordinate={checkpoint}
     title={title}
-    description={`${getDistance(location.coords, checkPoint).toFixed(0)} meters away`}
+    description={`${getDistance(location.coords, checkpoint).toFixed(0)} meters away`}
     pinColor= 'blue'
   />
   :
   <MapView.Marker
-    coordinate={checkPoint}
+    coordinate={checkpoint}
     title={title}
-    description={`${getDistance(location.coords, checkPoint).toFixed(0)} meters away`}
+    description={`${getDistance(location.coords, checkpoint).toFixed(0)} meters away`}
   />
 )}
 
