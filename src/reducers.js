@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native'
 import { combineReducers } from 'redux'
 import { request } from './helpers'
-import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, UPDATE_ACTIVE_CHECKPOINTS } from './actions'
+import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, UPDATE_ACTIVE_CHECKPOINTS, LOGIN, LOGOUT, GET_INITIAL_CHECKPOINTS} from './actions'
 
 
 const LATITUDE_DELTA =  0.04
@@ -128,6 +128,7 @@ const activePage = (state = INITIAL_PAGE, action) => {
           console.log(tracks.data.data)
         })
       })
+      .catch(error => console.log('catching this error'))
 
       return action.payload
     }
@@ -148,15 +149,40 @@ const trackData = (state = INITIAL_TRACK_DATA, action) => {
 
 const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
   switch(action.type){
+    case GET_INITIAL_CHECKPOINTS: {
+      return state
+    }
     case UPDATE_ACTIVE_CHECKPOINTS: return action.payload
+    default: return state
+  }
+}
+
+const token = (state = false, action) => {
+  switch(action.type){
+    case LOGIN: {
+      const {email, password} = action.payload
+
+        return request('/auth/token', 'post', action.payload)
+        .then(response => {
+          const {token} = response.data
+          return AsyncStorage.setItem('token', token)
+          .then(() => {
+            console.log(token)
+            return token
+          })
+          .catch(error => '')
+        })
+        .catch(error => console.log('rejected:', error))
+    }
+    case LOGOUT: {
+      AsyncStorage.setItem('token', '')
+      .catch(error => console.log('rejected:', error))
+      return null
+    }
     default: return state
   }
 }
 
 
 
-
-
-
-
-export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints })
+export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token })
