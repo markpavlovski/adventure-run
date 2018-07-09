@@ -51,9 +51,10 @@ export const getTrackData = () => {
           longitude: track.latlong.split(', ')[1]*1,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
+          id: track.id - 1
         })
       })
-      const promises = tracks.map(track => request(`/tracks/${track.id}/checkpoints`))
+      const promises = tracks.map(track => request(`/tracks/${track.id + 1}/checkpoints`))
       Promise.all(promises)
       .then(allCheckpoints => {
         const checkpointsArray = allCheckpoints.map(response => response.data.data.map( checkpoint => ({...checkpoint,
