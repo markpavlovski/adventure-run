@@ -87,9 +87,9 @@ export const login = (email,password) => (
           payload: {token}
         })
       })
+      .then(dispatch(getTrackData()))
       .catch(error => '')
     })
-    .then(dispatch(getTrackData()))
     .catch(error => console.log('rejected: incorrect password'))
   }
 )
@@ -105,9 +105,9 @@ export const loginIfTokenPresent = () => (
           payload: {token}
         })
       })
+      .then(dispatch(getTrackData()))
       .catch(error => '')
     })
-    .then(dispatch(getTrackData()))
     .catch(error => console.log('No token present'))
   }
 )
