@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Image, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { login } from '../actions'
@@ -11,19 +11,22 @@ class LoginScreen extends Component {
     this.state = {
       email: 'dandog@gmail.com',
       password: 'dandog',
+      showButtons: true
     };
   }
 
   render() {
     return (
 
-      <View style={{flex: 1, padding: 30, justifyContent: 'space-around', backgroundColor: 'rgba(55,130,135,.9)',
-}}>
-        <Image
+      <KeyboardAvoidingView
+        behavior="padding" enabled
+        style={{flex: 1, padding: 30, justifyContent: 'space-around', backgroundColor: 'rgba(55,130,135,.9)'}}
+        >
+        {this.state.showButtons ? <Image
           style={{width: 250, height: 250, margin: 'auto', alignSelf: 'center'}}
           // source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
           source={require('../assets/adventure_run.png')}
-        />
+        /> : null }
         <View style={{}}>
         <TextInput
           style={{height: 40, borderColor: 'white', borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5, color: 'white'}}
@@ -31,6 +34,9 @@ class LoginScreen extends Component {
           value={this.state.email}
           placeholder='email'
           placeholderTextColor='white'
+          onFocus={this.focus}
+          onBlur={this.blur}
+
         />
         <TextInput
           style={{height: 40, borderColor: 'white', borderWidth: 1, padding: 10, color: 'white', borderRadius: 5}}
@@ -39,9 +45,11 @@ class LoginScreen extends Component {
           placeholder='password'
           placeholderTextColor='white'
           secureTextEntry={true}
+          onFocus={this.focus}
+          onBlur={this.blur}
         />
       </View>
-      <View
+      {this.state.showButtons ? <View
         style={{
           zIndex: 99,
           borderRadius: 30,
@@ -68,9 +76,16 @@ class LoginScreen extends Component {
         >
           LOGIN
         </Text>
-      </View>
-    </View>
+      </View> : null}
+    </KeyboardAvoidingView>
     )
+  }
+
+  focus = () => {
+    this.setState({showButtons: false})
+  }
+  blur = () => {
+    this.setState({showButtons: true})
   }
 }
 
