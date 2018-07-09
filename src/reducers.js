@@ -1,7 +1,14 @@
 import { AsyncStorage } from 'react-native'
 import { combineReducers } from 'redux'
 import { request } from './helpers'
-import { CHANGE_ACTIVE_PAGE, CHANGE_ACTIVE_SCROLL_ITEM, UPDATE_ACTIVE_CHECKPOINTS, LOGIN, LOGOUT, GET_INITIAL_CHECKPOINTS} from './actions'
+import {
+  CHANGE_ACTIVE_PAGE,
+  CHANGE_ACTIVE_SCROLL_ITEM,
+  UPDATE_ACTIVE_CHECKPOINTS,
+  LOGIN, LOGOUT,
+  GET_INITIAL_CHECKPOINTS,
+  GET_TRACK_DATA
+} from './actions'
 
 
 const LATITUDE_DELTA =  0.04
@@ -58,56 +65,56 @@ const INITIAL_TRACK_DATA = [
     length: 5,
     checkPoints: GREEN_LAKE
   },
-  {
-    id: 1,
-    name: 'Ballard - Downtown Thru',
-    latitude: 47.667729,
-    longitude: -122.384861,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 12,
-    checkPoints: GREEN_LAKE
-  },
-  {
-    id: 2,
-    name: 'All The Parks Thru',
-    latitude: 47.617981,
-    longitude: -122.319498,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 10,
-    checkPoints: ALL_THE_PARKS
-  },
-  {
-    id: 3,
-    name: 'Troll Thru',
-    latitude: 47.651410,
-    longitude: -122.351054,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 6,
-    checkPoints: GREEN_LAKE
-  },
-  {
-    id: 4,
-    name: 'Montlake Brige Loop',
-    latitude: 47.647282,
-    longitude: -122.304621,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5,
-    checkPoints: GREEN_LAKE
-  },
-  {
-    id: 5,
-    name: 'Eastlake Stairs Loop',
-    latitude: 47.634961,
-    longitude: -122.322331,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5,
-    checkPoints: GREEN_LAKE
-  },
+  // {
+  //   id: 1,
+  //   name: 'Ballard - Downtown Thru',
+  //   latitude: 47.667729,
+  //   longitude: -122.384861,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 12,
+  //   checkPoints: GREEN_LAKE
+  // },
+  // {
+  //   id: 2,
+  //   name: 'All The Parks Thru',
+  //   latitude: 47.617981,
+  //   longitude: -122.319498,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 10,
+  //   checkPoints: ALL_THE_PARKS
+  // },
+  // {
+  //   id: 3,
+  //   name: 'Troll Thru',
+  //   latitude: 47.651410,
+  //   longitude: -122.351054,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 6,
+  //   checkPoints: GREEN_LAKE
+  // },
+  // {
+  //   id: 4,
+  //   name: 'Montlake Brige Loop',
+  //   latitude: 47.647282,
+  //   longitude: -122.304621,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 5,
+  //   checkPoints: GREEN_LAKE
+  // },
+  // {
+  //   id: 5,
+  //   name: 'Eastlake Stairs Loop',
+  //   latitude: 47.634961,
+  //   longitude: -122.322331,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 5,
+  //   checkPoints: GREEN_LAKE
+  // },
 ]
 
 INITIAL_ACTIVE_CHECKPOINTS = []
@@ -131,14 +138,18 @@ const activeScrollItem = (state = INITIAL_SCROLL_ITEM, action) => {
 }
 
 const trackData = (state = INITIAL_TRACK_DATA, action) => {
-  return state
+  switch(action.type){
+    case GET_TRACK_DATA: {
+      console.log('reducer', action.payload);
+      return action.payload
+    }
+    default: return state
+  }
 }
 
 const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
   switch(action.type){
-    case GET_INITIAL_CHECKPOINTS: {
-      return state
-    }
+    case GET_INITIAL_CHECKPOINTS: return state
     case UPDATE_ACTIVE_CHECKPOINTS: return action.payload
     default: return state
   }

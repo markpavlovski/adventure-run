@@ -5,9 +5,12 @@ import { AsyncStorage } from 'react-native'
 export const CHANGE_ACTIVE_PAGE = 'CHANGE_ACTIVE_PAGE'
 export const CHANGE_ACTIVE_SCROLL_ITEM = 'CHANGE_ACTIVE_SCROLL_ITEM'
 export const UPDATE_ACTIVE_CHECKPOINTS = 'UPDATE_ACTIVE_CHECKPOINTS'
+export const GET_TRACK_DATA = 'GET_TRACK_DATA'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 
+const LATITUDE_DELTA =  0.04
+const LONGITUDE_DELTA =  0.04
 
 export const changeActivePage = pageId => (
   dispatch => {
@@ -36,6 +39,30 @@ export const updateActiveCheckpoints = (checkpoints) => (
   }
 )
 
+export const getTrackData = () => {
+  console.log('getTrackData');
+  return (
+  dispatch => {
+    request('/tracks')
+    .then(response => {
+      const tracks = response.data.data.map(track=>({...track,
+        latitude: track.latlong.split(', ')[0]*1,
+        longitude: track.latlong.split(', ')[1]*1,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      }))
+      console.log('??',dispatch)
+      console.log('tracks',response.data.data)
+      dispatch({
+        type: GET_TRACK_DATA,
+        payload: tracks
+      })
+    })
+    .catch(error => console.log('Nope'))
+  }
+)}
+
+
 
 export const login = (email,password) => (
   dispatch => {
@@ -51,6 +78,7 @@ export const login = (email,password) => (
       })
       .catch(error => '')
     })
+    .then(dispatch(getTrackData()))
     .catch(error => console.log('rejected: incorrect password'))
   }
 )
@@ -68,7 +96,8 @@ export const loginIfTokenPresent = () => (
       })
       .catch(error => '')
     })
-    .catch(error => console.log('rejected: incorrect password'))
+    .then(dispatch(getTrackData()))
+    .catch(error => console.log('No token present'))
   }
 )
 
