@@ -1,3 +1,7 @@
+import { request } from './helpers'
+import { AsyncStorage } from 'react-native'
+
+
 export const CHANGE_ACTIVE_PAGE = 'CHANGE_ACTIVE_PAGE'
 export const CHANGE_ACTIVE_SCROLL_ITEM = 'CHANGE_ACTIVE_SCROLL_ITEM'
 export const UPDATE_ACTIVE_CHECKPOINTS = 'UPDATE_ACTIVE_CHECKPOINTS'
@@ -34,17 +38,28 @@ export const updateActiveCheckpoints = (checkpoints) => (
 
 
 export const login = (email,password) => (
+
   dispatch => {
-    dispatch({
-      type: LOGIN,
-      payload: {email, password}
+    request('/auth/token', 'post', {email, password})
+    .then(response => {
+      const {token} = response.data
+      return AsyncStorage.setItem('token', token)
+      .then(() => {
+        dispatch({
+          type: LOGIN,
+          payload: {token}
+        })
+      })
+      .catch(error => '')
     })
+    .catch(error => console.log('rejected: incorrect password'))
   }
 )
 
 
 export const logout = () => (
   dispatch => {
+    AsyncStorage.setItem('token', '')
     dispatch({
       type: LOGOUT,
     })

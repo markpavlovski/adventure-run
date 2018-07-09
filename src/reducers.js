@@ -118,20 +118,7 @@ INITIAL_ACTIVE_CHECKPOINTS = []
 
 const activePage = (state = INITIAL_PAGE, action) => {
   switch(action.type){
-    case CHANGE_ACTIVE_PAGE: {
-      console.log('iopioioio');
-      AsyncStorage.getItem('token')
-      .then(token => {
-        console.log(token)
-        return request('/tracks')
-        .then(tracks => {
-          console.log(tracks.data.data)
-        })
-      })
-      .catch(error => console.log('catching this error'))
-
-      return action.payload
-    }
+    case CHANGE_ACTIVE_PAGE: return action.payload
     default: return state
   }
 }
@@ -159,26 +146,8 @@ const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
 
 const token = (state = false, action) => {
   switch(action.type){
-    case LOGIN: {
-      const {email, password} = action.payload
-
-        return request('/auth/token', 'post', action.payload)
-        .then(response => {
-          const {token} = response.data
-          return AsyncStorage.setItem('token', token)
-          .then(() => {
-            console.log(token)
-            return token
-          })
-          .catch(error => '')
-        })
-        .catch(error => console.log('rejected:', error))
-    }
-    case LOGOUT: {
-      AsyncStorage.setItem('token', '')
-      .catch(error => console.log('rejected:', error))
-      return null
-    }
+    case LOGIN: return action.payload.token
+    case LOGOUT: return null
     default: return state
   }
 }
