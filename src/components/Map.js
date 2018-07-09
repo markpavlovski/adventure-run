@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions, Touch
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
-import {updateActiveCheckpoints} from '../actions'
+import {updateActivecheckpoints} from '../actions'
 
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
@@ -45,16 +45,16 @@ class Map extends Component {
               <TrackMarker
                 key={idx}
                 animateSlide={this.animateSlide}
-                showCheckpoints = {this.showCheckpoints}
+                showcheckpoints = {this.showcheckpoints}
                 {...{track, setShowScrollList: this.setShowScrollList}}
               />
             ) : null }
 
-          {/*  RENDER CHECKPOINTS */}
-            { this.state.showTrackDetail ? this.props.activeCheckpoints.map((checkPoint, idx, checkPoints) =>
+          {/*  RENDER checkpoints */}
+            { this.state.showTrackDetail ? this.props.activecheckpoints.map((checkpoint, idx, checkpoints) =>
               <CheckpointMarker
                 key={idx}
-                {...{checkPoint, idx, checkPoints}}
+                {...{checkpoint, idx, checkpoints}}
                 location={this.state.location}
               />
             ) : null }
@@ -139,9 +139,9 @@ class Map extends Component {
 
   changeMapView = (trackIndex) => {
     const tracks = this.props.trackData
-    const checkPoints = tracks[trackIndex].checkPoints
-    this.showCheckpoints(trackIndex)
-    this.fitToMarkers(checkPoints)
+    const checkpoints = tracks[trackIndex].checkpoints
+    this.showcheckpoints(trackIndex)
+    this.fitToMarkers(checkpoints)
   }
 
   handleMapPress = () => {
@@ -157,8 +157,8 @@ class Map extends Component {
 
   beginActivity = trackId => {
     const tracks = this.props.trackData
-    const checkPoints = tracks.find(track => track.id === trackId).checkPoints
-    this.fitToMarkers(checkPoints)
+    const checkpoints = tracks.find(track => track.id === trackId).checkpoints
+    this.fitToMarkers(checkpoints)
     this.animateSlide(FULL,NONE)
     this.setState({
       showScrollList: false,
@@ -166,11 +166,11 @@ class Map extends Component {
     })
   }
 
-  showCheckpoints = trackId => {
+  showcheckpoints = trackId => {
     const tracks = this.props.trackData
-    const checkPoints = tracks.find(track => track.id === trackId).checkPoints
-    this.props.updateActiveCheckpoints(checkPoints)
-    this.fitToMarkers(checkPoints)
+    const checkpoints = tracks.find(track => track.id === trackId).checkpoints
+    this.props.updateActivecheckpoints(checkpoints)
+    this.fitToMarkers(checkpoints)
     this.setState({
       showTrackMarkers: false,
       showTrackDetail: true,
@@ -218,6 +218,6 @@ const NONE = 'NONE'
 const FULL = 'FULL'
 
 
-const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
-const mapStateToProps = ({activePage, activeScrollItem, trackData, activeCheckpoints}) => ({activePage, activeScrollItem, trackData,activeCheckpoints})
+const mapDispatchToProps = dispatch => bindActionCreators({updateActivecheckpoints}, dispatch)
+const mapStateToProps = ({activePage, activeScrollItem, trackData, activecheckpoints}) => ({activePage, activeScrollItem, trackData,activecheckpoints})
 export default connect(mapStateToProps, mapDispatchToProps)(Map)

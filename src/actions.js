@@ -32,10 +32,24 @@ export const changeActiveScrollItem = itemIndex => (
 
 export const updateActiveCheckpoints = (checkpoints) => (
   dispatch => {
-    dispatch({
-      type: UPDATE_ACTIVE_CHECKPOINTS,
-      payload: checkpoints
+    request('/tracks/1/checkpoints')
+    .then(response => {
+      console.log(response.data.data)
+      const checkpoints = response.data.data
+      // .map( checkpoint => ({...checkpoint,
+      //   //   latitude: track.latlong.split(', ')[0]*1,
+      // }))
+      .map(checkpoint=>({...checkpoint,
+        latitude: checkpoint.latlong.split(', ')[0]*1,
+        longitude: checkpoint.latlong.split(', ')[1]*1,
+      }))
+      dispatch({
+        type: UPDATE_ACTIVE_CHECKPOINTS,
+        payload: checkpoints
+      })
     })
+    .catch(()=>console.log('checkpoints not found'))
+
   }
 )
 
@@ -45,17 +59,27 @@ export const getTrackData = () => {
   dispatch => {
     request('/tracks')
     .then(response => {
-      const tracks = response.data.data.map(track=>({...track,
-        latitude: track.latlong.split(', ')[0]*1,
-        longitude: track.latlong.split(', ')[1]*1,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      }))
-      console.log('??',dispatch)
-      console.log('tracks',response.data.data)
-      dispatch({
-        type: GET_TRACK_DATA,
-        payload: tracks
+      const tracks = response.data.data.map(track=>{
+        return ({...track,
+          latitude: track.latlong.split(', ')[0]*1,
+          longitude: track.latlong.split(', ')[1]*1,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        })
+      })
+      const promises = tracks.map(track => request(`/tracks/${track.id}/checkpoints`))
+      Promise.all(promises)
+      .then(allCheckpoints => {
+        const checkpointsArray = allCheckpoints.map(response => response.data.data.map( checkpoint => ({...checkpoint,
+          latitude: checkpoint.latlong.split(', ')[0]*1,
+          longitude: checkpoint.latlong.split(', ')[1]*1,
+        })))
+        const tracksWithCheckpoints = tracks.map((track, idx) => ({...track, checkpoints: checkpointsArray[idx]}))
+        console.log(tracksWithCheckpoints);
+        dispatch({
+          type: GET_TRACK_DATA,
+          payload: tracksWithCheckpoints
+        })
       })
     })
     .catch(error => console.log('Nope'))
