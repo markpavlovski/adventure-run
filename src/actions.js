@@ -38,7 +38,6 @@ export const updateActiveCheckpoints = (checkpoints) => (
 
 
 export const login = (email,password) => (
-
   dispatch => {
     request('/auth/token', 'post', {email, password})
     .then(response => {
@@ -56,6 +55,22 @@ export const login = (email,password) => (
   }
 )
 
+export const loginIfTokenPresent = () => (
+  dispatch => {
+    request('/auth/token')
+    .then(response => {
+      return AsyncStorage.getItem('token')
+      .then((token) => {
+        dispatch({
+          type: LOGIN,
+          payload: {token}
+        })
+      })
+      .catch(error => '')
+    })
+    .catch(error => console.log('rejected: incorrect password'))
+  }
+)
 
 export const logout = () => (
   dispatch => {

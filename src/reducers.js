@@ -144,7 +144,7 @@ const activeCheckpoints = (state = INITIAL_ACTIVE_CHECKPOINTS, action) => {
   }
 }
 
-const token = (state = false, action) => {
+const token = (state = '', action) => {
   switch(action.type){
     case LOGIN: return action.payload.token
     case LOGOUT: return null

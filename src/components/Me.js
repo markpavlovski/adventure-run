@@ -27,8 +27,7 @@ const Me = props => (
 
       }}
       onPress={()=>{
-        console.log('bye')
-        console.log('bye',props.token)
+        console.log('goodbye:',props.token)
         props.logout()
       }}
       >

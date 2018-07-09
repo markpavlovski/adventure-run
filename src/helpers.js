@@ -103,7 +103,8 @@ export const AuthenticationService = new AuthService()
 
 
 
-REACT_APP_BACKEND='http://10.0.0.85:3000'
+// REACT_APP_BACKEND='http://10.0.0.85:3000'
+REACT_APP_BACKEND='http://10.5.82.230:3000'
 
 export const request = (path, method = 'get', body = null) => {
   let bearerToken = ''
