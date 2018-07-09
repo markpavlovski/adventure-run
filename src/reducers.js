@@ -55,16 +55,16 @@ const ALL_THE_PARKS = [
 }))
 
 const INITIAL_TRACK_DATA = [
-  {
-    id: 0,
-    name: 'Green Lake Loop',
-    latitude: 47.681471,
-    longitude: -122.328945,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-    length: 5,
-    checkPoints: GREEN_LAKE
-  },
+  // {
+  //   id: 0,
+  //   name: 'Green Lake Loop',
+  //   latitude: 47.681471,
+  //   longitude: -122.328945,
+  //   latitudeDelta: LATITUDE_DELTA,
+  //   longitudeDelta: LONGITUDE_DELTA,
+  //   length: 5,
+  //   checkPoints: GREEN_LAKE
+  // },
   // {
   //   id: 1,
   //   name: 'Ballard - Downtown Thru',

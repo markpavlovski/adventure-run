@@ -90,7 +90,12 @@ class Map extends Component {
     this.animateSlide = _ => _
     this.state = {
       location: null,
-      region: {...tracks[0], latitude: tracks[0].latitude - 0.009},
+      region: {
+        latitude: 47.680471,
+        longitude: -122.328945,
+        latitudeDelta: 0.04,
+        longitudeDelta: 0.04,
+      },
       errorMessage: null,
       showScrollList: false,
       showTrackMarkers: true,
@@ -103,7 +108,7 @@ class Map extends Component {
   }
 
   componentDidMount(){
-    setTimeout(() => this.fitToMarkers(this.props.trackData), 100)
+    setTimeout(() => this.fitToMarkers(this.props.trackData), 500)
     console.log('mounter');
     this.locationTracker = setInterval(this.getLocationAsync,1000)
   }
