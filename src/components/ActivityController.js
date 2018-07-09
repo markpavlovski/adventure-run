@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, Dimensions } from "react-native"
 import { Constants, Location, Permissions, Audio  } from "expo";
 import { Icon } from 'react-native-elements'
 import moment from 'moment'
+import { request } from '../helpers'
+
 
 
 import CustomButton from './CustomButton'
@@ -46,11 +48,13 @@ class ActivityController extends Component {
       pace: (0).toFixed(2),
       inProgress: true,
       location: null,
-      coordinates: [],
-      completed: false
+      completed: false,
     }
+    this.coordinates = []
+    this.distance = 0
     this.startTime = null
     this.currentTime = null
+    this.finalDisplayTime = null
     this.sounds = {
       START: require('../assets/start.wav'),
       CHECKPOINT: require('../assets/checkpoint.mp3'),
@@ -58,9 +62,7 @@ class ActivityController extends Component {
       SUBMIT: require('../assets/start.wav')
     }
     this.checkpoints = props.activeCheckpoints
-      .map((cp,idx) => ({...cp, id: idx, visited: false, timeStamp: null, distance: 0}))
-    // console.log(this.checkpoints)
-    // console.log('!!!!', props.trackId)
+      .map((cp,idx) => ({...cp, visited: false, timeStamp: null, distance: 0}))
   }
 
   componentDidMount() {
@@ -86,19 +88,38 @@ class ActivityController extends Component {
     let hours = moment(this.state.currentTime).diff(this.state.startTime, 'hours')
     hours = hours < 10 ? '0'+hours : hours
 
-    return `${hours} : ${minutes} : ${seconds}`
+    return `${hours}:${minutes}:${seconds}`
   }
 
   handleStop = () => {
+    this.finalDisplayTime = this.displayTimer()
     clearInterval(this.timer)
     this.setState({inProgress: false})
-    this.props.displayRunPath(this.state.coordinates)
+    this.props.displayRunPath(this.coordinates)
     this.playSound(this.sounds.STOP)
   }
 
   handleFinish = () => {
     this.props.resetView()
-    this.props.displayRunPath([])
+    const times = this.checkpoints.map(checkpoint => {
+      const checkpoint_time = checkpoint.checkpointTime ? checkpoint.checkpointTime : ''
+      return {
+        checkpoint_id: checkpoint.id,
+        checkpoint_time
+      }
+    })
+    // console.log(times)
+    console.log('final distance', this.distance)
+    const distance = (this.distance/1000).toFixed(2)
+    const track_id = this.checkpoints[0].track_id
+    const runData = {
+      track_id,
+    	distance,
+    	'time': this.finalDisplayTime,
+    	'path': JSON.stringify(this.coordinates),
+    	times
+    }
+    request('/runs','post',runData)
     this.playSound(this.sounds.SUBMIT)
   }
 
@@ -111,13 +132,15 @@ class ActivityController extends Component {
     }
 
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location, coordinates: [...this.state.coordinates,location.coords] })
+    this.setState({ location })
+    this.coordinates.push(({...location.coords, timeStamp: new Date()}))
     this.getCurrentSpeed()
     this.examineCheckpoints()
+    this.updateDistance()
   }
 
   getCurrentSpeed = () => {
-    const coordinates = this.state.coordinates
+    const coordinates = this.coordinates
     if (coordinates.length > 4) {
       const sample = coordinates.filter((el,idx,arr) => idx > arr.length - 4)
       let distance = 0
@@ -149,7 +172,7 @@ class ActivityController extends Component {
 
     this.checkpoints = this.checkpoints.map(cp => {
       const distance = getDistance(cp, this.state.location.coords)
-      if (distance < 20 && !cp.visited) {
+      if (distance < 5000 && !cp.visited) {
         return this.handleCheckpointVisit(cp)
       }
       return cp
@@ -166,13 +189,25 @@ class ActivityController extends Component {
 
   handleCheckpointVisit = (checkpoint) => {
     this.playSound(this.sounds.STOP)
-    return {...checkpoint, timeStamp: new Date(), visited: true}
+    return {...checkpoint, timeStamp: new Date(), visited: true, checkpointTime: this.displayTimer()}
   }
 
   handleCompletion = () => {
     this.setState({completed: true})
     console.log('congrats!!')
     this.props.setShowCompleted(true)
+  }
+
+  updateDistance = () => {
+    if (this.coordinates.length > 1){
+      const idx2 = this.coordinates.length - 1
+      const idx1 = this.coordinates.length - 2
+      const current = this.coordinates[idx2]
+      const previous = this.coordinates[idx1]
+      const distanceDelta = getDistance(current, previous)
+      console.log(current,previous,distanceDelta)
+      this.distance += distanceDelta
+    }
   }
 
 }

@@ -139,10 +139,7 @@ const activeScrollItem = (state = INITIAL_SCROLL_ITEM, action) => {
 
 const trackData = (state = INITIAL_TRACK_DATA, action) => {
   switch(action.type){
-    case GET_TRACK_DATA: {
-      console.log('reducer', action.payload);
-      return action.payload
-    }
+    case GET_TRACK_DATA: return action.payload
     default: return state
   }
 }

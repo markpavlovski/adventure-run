@@ -66,7 +66,7 @@ class Map extends Component {
             ? <MapView.Polyline
           		coordinates={this.state.runPath}
           		strokeColor="#000"
-          		strokeWidth={20}
+          		strokeWidth={5}
         	  />
             : null
           }
@@ -109,7 +109,7 @@ class Map extends Component {
 
   componentDidMount(){
     setTimeout(() => this.fitToMarkers(this.props.trackData), 500)
-    console.log('mounter');
+    console.log('mounted');
     this.locationTracker = setInterval(this.getLocationAsync,1000)
   }
 
