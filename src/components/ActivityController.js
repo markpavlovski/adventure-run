@@ -207,7 +207,6 @@ class ActivityController extends Component {
       const current = this.coordinates[idx2]
       const previous = this.coordinates[idx1]
       const distanceDelta = getDistance(current, previous)
-      console.log(current,previous,distanceDelta)
       this.distance += distanceDelta
     }
   }

@@ -43,6 +43,7 @@ class ScrollList extends Component {
           setDisplay = {this.setDisplay}
           displaySize = {this.state.displaySize}
           xOffset = {this.xOffset}
+          distanceToMarker = {this.props.distanceToMarker}
         />)}
       </Animated.ScrollView>
     </Animated.View>

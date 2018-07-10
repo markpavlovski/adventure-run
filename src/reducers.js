@@ -7,7 +7,8 @@ import {
   UPDATE_ACTIVE_CHECKPOINTS,
   LOGIN, LOGOUT,
   GET_INITIAL_CHECKPOINTS,
-  GET_TRACK_DATA
+  GET_TRACK_DATA,
+  SET_CLOSEST_DISTANCE
 } from './actions'
 
 
@@ -60,6 +61,13 @@ const token = (state = '', action) => {
   }
 }
 
+const closestCheckpointDistance = (state = Infinity, action) => {
+  switch(action.type){
+    case SET_CLOSEST_DISTANCE: return action.payload.distance
+    default: return state
+  }
+}
 
 
-export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token })
+
+export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token, closestCheckpointDistance })

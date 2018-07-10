@@ -5,7 +5,7 @@ import { Platform, StyleSheet, Text, View, ListView, Animated, Dimensions, Touch
 import { MapView, Constants, Location, Permissions } from 'expo'
 
 import {getDistance} from '../helpers'
-import {updateActiveCheckpoints} from '../actions'
+import {updateActiveCheckpoints, setClosestDistance} from '../actions'
 
 import TrackMarker from './TrackMarker'
 import CheckpointMarker from './CheckpointMarker'
@@ -51,13 +51,7 @@ class Map extends Component {
             ) : null }
 
           {/*  RENDER checkpoints */}
-            { this.state.showTrackDetail ? this.props.activeCheckpoints.map((checkpoint, idx, checkpoints) =>
-              <CheckpointMarker
-                key={idx}
-                {...{checkpoint, idx, checkpoints}}
-                location={this.state.location}
-              />
-            ) : null }
+            { this.state.showTrackDetail ? this.renderCheckpoints() : null }
 
           {/* RENDER POLYLINE */}
 
@@ -77,6 +71,7 @@ class Map extends Component {
           changeMapView={this.changeMapView}
           registerCallback={this.registerCallback}
           beginActivity={this.beginActivity}
+          distanceToMarker={this.state.distanceToMarker}
         />
       </View>
     </View>
@@ -103,12 +98,13 @@ class Map extends Component {
       showActivityUI: false,
       showCompleted: false,
       trackId: null,
-      runPath: []
+      runPath: [],
+      distanceToMarker: Infinity
     }
   }
 
   componentDidMount(){
-    setTimeout(() => this.fitToMarkers(this.props.trackData), 500)
+    setTimeout(() => this.fitToMarkers(this.props.trackData), 1000)
     console.log('mounted');
     this.locationTracker = setInterval(this.getLocationAsync,1000)
   }
@@ -201,13 +197,30 @@ class Map extends Component {
         errorMessage: 'Permission to access location was denied',
       })
     }
+
     let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location })
+    const distances = this.props.activeCheckpoints.map(checkpoint => getDistance(checkpoint,this.state.location.coords))
+    const distanceToMarker = Math.min(...distances, Infinity).toFixed(0)
+
+    this.setState({ location, distanceToMarker})
   }
 
   setShowCompleted = (bool) => {
     this.setState({showCompleted: bool})
   }
+
+
+  renderCheckpoints = () => {
+
+    return this.props.activeCheckpoints.map((checkpoint, idx, checkpoints) =>
+      <CheckpointMarker
+        key={idx}
+        {...{checkpoint, idx, checkpoints}}
+        location={this.state.location}
+      />
+    )
+  }
+
 
 }
 
@@ -218,6 +231,6 @@ const NONE = 'NONE'
 const FULL = 'FULL'
 
 
-const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints, setClosestDistance}, dispatch)
 const mapStateToProps = ({activePage, activeScrollItem, trackData, activeCheckpoints}) => ({activePage, activeScrollItem, trackData, activeCheckpoints})
 export default connect(mapStateToProps, mapDispatchToProps)(Map)

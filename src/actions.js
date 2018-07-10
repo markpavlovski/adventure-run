@@ -8,6 +8,7 @@ export const UPDATE_ACTIVE_CHECKPOINTS = 'UPDATE_ACTIVE_CHECKPOINTS'
 export const GET_TRACK_DATA = 'GET_TRACK_DATA'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
+export const SET_CLOSEST_DISTANCE = 'SET_CLOSEST_DISTANCE'
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
@@ -62,12 +63,12 @@ export const getTrackData = () => {
           longitude: checkpoint.latlong.split(', ')[1]*1,
         })))
         const tracksWithCheckpoints = tracks.map((track, idx) => ({...track, checkpoints: checkpointsArray[idx]}))
-        console.log(tracksWithCheckpoints);
         dispatch({
           type: GET_TRACK_DATA,
           payload: tracksWithCheckpoints
         })
       })
+      .catch(error => console.log('Error in retreiving checkpoints'))
     })
     .catch(error => console.log('Nope'))
   }
@@ -119,5 +120,15 @@ export const logout = () => (
       type: LOGOUT,
     })
     dispatch(changeActivePage(2))
+  }
+)
+
+
+export const setClosestDistance = (distance) => (
+  dispatch => {
+    dispatch({
+      type: SET_CLOSEST_DISTANCE,
+      payload: {distance}
+    })
   }
 )

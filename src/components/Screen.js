@@ -15,8 +15,11 @@ class Screen extends Component {
     const props = this.props
     const config = {
       velocityThreshold: 0.3,
-      directionalOffsetThreshold: 80
-    };
+      directionalOffsetThreshold: 80,
+      START_THRESHOLD: 30
+    }
+    const distance = this.props.distanceToMarker
+
     return (
     <View style={styles.scrollPage}>
       <Animated.View style={[styles.screen, this.transitionAnimation(props.index)]}>
@@ -29,23 +32,26 @@ class Screen extends Component {
           >
             <Text style={styles.text} onPress={this.handleAnimateSlide}>{props.text}</Text>
           </GestureRecognizer>
-          <Button
-            style={{marginTop: 50}}
-            title="START THE RUN"
-            loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
-            // titleStyle={{ fontWeight: "700", fontSize: 70 }}
-            fontSize={16}
-            color='#378287'
-            buttonStyle={{
-              backgroundColor: "rgba(92, 99,216, 0)",
-              padding: 10,
-              borderColor: '#378287',
-              borderWidth: 2,
-              borderRadius: 5
-            }}
-            onPress={()=>props.beginActivity(props.index)}
-          />
-          <Text style={styles.warningText}>You Must be within 20 min from the track to begin this activity.</Text>
+          {distance < config.START_THRESHOLD
+            ? <Button
+                style={{marginTop: 50}}
+                title="START THE RUN"
+                loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
+                fontSize={16}
+                color='#378287'
+                buttonStyle={styles.button}
+                onPress={()=>props.beginActivity(props.index)}
+              />
+          : <Button
+              style={{marginTop: 50, width: 180}}
+              title="GET CLOSER TO TRACK"
+              loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
+              fontSize={16}
+              color='#378287'
+              buttonStyle={styles.button}
+            />
+        }
+          <Text style={styles.warningText}>You are {distance} meters away from the closest marker on this track. You must be within {config.START_THRESHOLD} meters of the track to get started.</Text>
         </View>
       </Animated.View>
     </View>
@@ -161,12 +167,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 40,
     marginLeft: 40,
-    marginRight: 40
+    marginRight: 40,
+  },
+  button: {
+    backgroundColor: "rgba(92, 99,216, 0)",
+    padding: 10,
+    borderColor: '#378287',
+    borderWidth: 2,
+    borderRadius: 5,
   }
 });
 
 
-const mapStateToProps = ({activeScrollItem, trackData}) => ({activeScrollItem, trackData})
+const mapStateToProps = ({activeScrollItem, trackData, closestCheckpointDistance}) => ({activeScrollItem, trackData, closestCheckpointDistance})
 const mapDispatchToProps = dispatch => bindActionCreators({changeActiveScrollItem}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Screen)
