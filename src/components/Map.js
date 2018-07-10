@@ -84,7 +84,10 @@ class Map extends Component {
     this.DISTANCE_THRESHOLD = 10
     this.animateSlide = _ => _
     this.state = {
-      location: null,
+      location: {
+        latitude: 47.680471,
+        longitude: -122.328945,
+      },
       region: {
         latitude: 47.680471,
         longitude: -122.328945,
@@ -104,7 +107,7 @@ class Map extends Component {
   }
 
   componentDidMount(){
-    setTimeout(() => this.fitToMarkers(this.props.trackData), 1000)
+    this.initialTimeout = setTimeout(() => this.fitToMarkers(this.props.trackData), 1000)
     console.log('mounted');
     this.locationTracker = setInterval(this.getLocationAsync,1000)
   }
@@ -112,6 +115,7 @@ class Map extends Component {
 
   componentWillUnmount() {
     clearInterval(this.locationTracker)
+    clearInterval(this.initialTimeout)
   }
 
 

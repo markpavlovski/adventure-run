@@ -30,11 +30,10 @@ class Screen extends Component {
             config={config}
             style={styles.gestureContainer}
           >
-            <Text style={styles.text} onPress={this.handleAnimateSlide}>{props.text}</Text>
-          </GestureRecognizer>
+            <Text style={styles.titleText} onPress={this.handleAnimateSlide}>{props.text}</Text>
           {distance < config.START_THRESHOLD
             ? <Button
-                style={{marginTop: 50}}
+                style={{width: 180}}
                 title="START THE RUN"
                 loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
                 fontSize={16}
@@ -43,7 +42,7 @@ class Screen extends Component {
                 onPress={()=>props.beginActivity(props.index)}
               />
           : <Button
-              style={{marginTop: 50, width: 180}}
+              style={{width: 180}}
               title="GET CLOSER TO TRACK"
               loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
               fontSize={16}
@@ -51,7 +50,29 @@ class Screen extends Component {
               buttonStyle={styles.button}
             />
         }
-          <Text style={styles.warningText}>You are {distance} meters away from the closest marker on this track. You must be within {config.START_THRESHOLD} meters of the track to get started.</Text>
+        <View style={styles.leaderboardHeaderContainer}>
+          <Text style={styles.leaderboardHeader}>Weekly Leaderboard</Text>
+        </View>
+          {/* <Text style={styles.warningText}>You are {distance} meters away from the closest marker on this track. You must be within {config.START_THRESHOLD} meters of the track to get started.</Text> */}
+        <View style={styles.leaderboardTable}>
+          <View>
+            <Text style={styles.runnerName}>1. {'Dandog'}</Text>
+            <Text style={styles.runnerName}>2. {'Mark Pavlovski'}</Text>
+            <Text style={styles.runnerName}>3. {'Tengo'}</Text>
+          </View>
+          <View>
+            <Text style={styles.runTime}>00:20:36</Text>
+            <Text style={styles.runTime}>00:30:13</Text>
+            <Text style={styles.runTime}>00:31:56</Text>
+
+          </View>
+        </View>
+        <Text style={styles.guild}>Track held by {
+          <Text style={{fontWeight: 'bold'}}>Lovelace Lemuirs</Text>
+        }</Text>
+
+
+        </GestureRecognizer>
         </View>
       </Animated.View>
     </View>
@@ -146,35 +167,71 @@ const styles = StyleSheet.create({
   },
   gestureContainer: {
     justifyContent: 'center',
-    height: SMALL_CONTENT_HEIGHT,
+    // height: SMALL_CONTENT_HEIGHT,
     width: SCREEN_WIDTH,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   contentContainer: {
     justifyContent: 'flex-start',
-    height: 400,
+    // height: 400,
     alignItems: 'center'
   },
-  text: {
+  titleText: {
     height: SMALL_CONTENT_HEIGHT,
     width: SCREEN_WIDTH-40,
     fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     padding: 30,
+    alignSelf: 'center',
   },
   warningText: {
     fontSize: 12,
-    marginTop: 40,
+    // marginTop: 40,
     marginLeft: 40,
     marginRight: 40,
   },
   button: {
-    backgroundColor: "rgba(92, 99,216, 0)",
+    backgroundColor: "rgba(0,0,0,0)",
     padding: 10,
     borderColor: '#378287',
     borderWidth: 2,
     borderRadius: 5,
+    marginTop: -20
+  },
+  leaderboardHeaderContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#378287',
+    marginTop: 30,
+    marginBottom: 15
+  },
+  leaderboardHeader: {
+    alignSelf: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'left',
+    width: SCREEN_WIDTH-80,
+    color: '#378287',
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  leaderboardTable: {
+    // flex: 1,
+    width: SCREEN_WIDTH-80,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  runnerName: {
+    fontSize: 14
+  },
+  runTime: {
+    fontSize: 14
+  },
+  guild: {
+    textAlign: 'left',
+    width: SCREEN_WIDTH-80,
+    marginTop: 20,
+    color: '#378287',
   }
 });
 

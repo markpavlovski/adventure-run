@@ -82,11 +82,12 @@ export const login = (email,password) => (
     .then(response => {
       const {token} = response.data
       return AsyncStorage.setItem('token', token)
-      .then(() => {
+      .then(response => {
         dispatch({
           type: LOGIN,
           payload: {token}
         })
+        return response
       })
       .then(dispatch(getTrackData()))
       .catch(error => '')
@@ -100,11 +101,12 @@ export const loginIfTokenPresent = () => (
     request('/auth/token')
     .then(response => {
       return AsyncStorage.getItem('token')
-      .then((token) => {
+      .then(token => {
         dispatch({
           type: LOGIN,
           payload: {token}
         })
+        return token
       })
       .then(dispatch(getTrackData()))
       .catch(error => '')
@@ -116,6 +118,7 @@ export const loginIfTokenPresent = () => (
 export const logout = () => (
   dispatch => {
     AsyncStorage.setItem('token', '')
+    .catch(error => 'logout error')
     dispatch({
       type: LOGOUT,
     })
