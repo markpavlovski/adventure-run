@@ -5,6 +5,10 @@ import axios from 'axios'
 
 
 export const getDistance = (a,b) => {
+
+  if (!(a && b)) return 0
+  if (!(a.latitude && a.longitude && b.latitude && b.longitude)) return 0
+  
   const R = 6371000 // metres
   const φ1 = a.latitude * (Math.PI / 180)
   const φ2 = b.latitude * (Math.PI / 180)
