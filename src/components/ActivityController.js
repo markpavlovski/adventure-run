@@ -133,12 +133,17 @@ class ActivityController extends Component {
       })
     }
 
-    let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
-    this.setState({ location })
-    this.coordinates.push(({...location.coords, timeStamp: new Date()}))
-    this.getCurrentSpeed()
-    this.examineCheckpoints()
-    this.updateDistance()
+    try {
+      let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true})
+      this.setState({ location })
+      this.coordinates.push(({...location.coords, timeStamp: new Date()}))
+      this.getCurrentSpeed()
+      this.examineCheckpoints()
+      this.updateDistance()
+    }
+    catch(error) {
+      console.log(error)
+    }
   }
 
   getCurrentSpeed = () => {

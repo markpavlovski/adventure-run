@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Button } from 'react-native-elements'
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures'
-
+import { START_THRESHOLD } from '../settings'
 
 import { changeActiveScrollItem} from '../actions'
 
@@ -16,7 +16,7 @@ class Screen extends Component {
     const config = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80,
-      START_THRESHOLD: 30000
+      START_THRESHOLD
     }
     const distance = this.props.distanceToMarker
 

@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native'
 import { combineReducers } from 'redux'
 import { request } from './helpers'
+import { INITIAL_PAGE } from './settings'
 import {
   CHANGE_ACTIVE_PAGE,
   CHANGE_ACTIVE_SCROLL_ITEM,
@@ -15,7 +16,6 @@ import {
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
-const INITIAL_PAGE = 3
 const INITIAL_SCROLL_ITEM = 0
 
 
