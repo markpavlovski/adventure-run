@@ -1,38 +1,62 @@
 import React, {Component} from "react"
-import { StyleSheet, Text, View, Image } from "react-native"
+import { StyleSheet, Text, View, Image, TouchableWithoutFeedback } from "react-native"
 import { Icon } from 'react-native-elements'
 import { STATIC_MAPS_API_KEY } from '../keys'
+import StatsMap from './StatsMap'
 
 import moment from 'moment'
 
-const StatsCard = props => {
-  const {
-    created_at,
-    latlong,
-    name,
-    time,
-    distance,
-    checkpoints
-  } = props.data
+class StatsCard extends Component {
 
-  const completed = !checkpoints.find(el => !el.checkpoint_time)
+  render(){
 
-  return (
-  <View style={styles.statsCard}>
-    <View style={styles.header}>
-      <Text style={styles.headerText}>{moment(created_at).format("MMM DD, h:mm a")}</Text>
-    </View>
-    <Image
-      style={styles.image}
-      source={{uri: getPath(latlong)}}
-    />
-    <Text>{name}</Text>
-    <Text>{time}</Text>
-    <Text>{distance}</Text>
-    <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text>
-    {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)}
-  </View>
-)}
+    const {
+      created_at,
+      latlong,
+      name,
+      time,
+      distance,
+      checkpoints,
+      path
+    } = this.props.data
+
+    const completed = !checkpoints.find(el => !el.checkpoint_time)
+
+    return (
+      <View style={styles.statsCard}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{moment(created_at).format("MMM DD, h:mm a")}</Text>
+        </View>
+        <TouchableWithoutFeedback
+          onPress={()=>this.setState({isOpen: !this.state.isOpen})}
+        >
+          <Image
+            style={styles.image}
+            source={{uri: getPath(latlong)}}
+          />
+        </TouchableWithoutFeedback>
+        <Text>{name}</Text>
+        {this.state.isOpen ? <View>
+        <Text>{time}</Text>
+        <Text>{distance}</Text>
+        <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text>
+        {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)}
+        <StatsMap path={path} checkpoints={checkpoints} latlong={latlong}/>
+      </View> : null
+      }
+      </View>
+    )
+  }
+
+  constructor (){
+    super()
+    this.state = {
+      isOpen: false
+    }
+
+  }
+
+}
 
 
 const getPath = latlong => {
