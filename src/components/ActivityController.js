@@ -6,6 +6,7 @@ import { Constants, Location, Permissions, Audio  } from "expo";
 import { Icon } from 'react-native-elements'
 import moment from 'moment'
 import { request } from '../helpers'
+import { CHECKPOINT_COLLISION_RADIUS } from '../settings'
 
 
 
@@ -51,7 +52,7 @@ class ActivityController extends Component {
       completed: false,
     }
 
-    this.CHECKPOINT_COLLISION_RADIUS = 15
+    this.CHECKPOINT_COLLISION_RADIUS = CHECKPOINT_COLLISION_RADIUS
     this.coordinates = []
     this.distance = 0
     this.startTime = null
