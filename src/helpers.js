@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { AsyncStorage } from 'react-native'
 import axios from 'axios'
+import { BACKEND_SERVER } from './settings'
 
 
 export const getDistance = (a,b) => {
@@ -107,7 +108,7 @@ export const AuthenticationService = new AuthService()
 
 
 // REACT_APP_BACKEND='http://10.0.0.85:3000'
-REACT_APP_BACKEND='http://10.5.82.230:3000'
+// REACT_APP_BACKEND='http://10.5.82.230:3000'
 // REACT_APP_BACKEND='https://adventure-run-backend.herokuapp.com'
 
 export const request = (path, method = 'get', body = null) => {
@@ -118,7 +119,7 @@ export const request = (path, method = 'get', body = null) => {
     console.log('!!!', token)
     if (token) bearerToken = `Bearer ${token}`
 
-    return axios(`${REACT_APP_BACKEND}${path}`, {
+    return axios(`${BACKEND_SERVER}${path}`, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
