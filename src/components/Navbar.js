@@ -46,7 +46,7 @@ const iconData = [
   {
     name:'chart',
     type:'simple-line-icon',
-    label: 'Stats',
+    label: 'Runs',
     id: 3,
   },
   {

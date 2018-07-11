@@ -16,7 +16,7 @@ class Screen extends Component {
     const config = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80,
-      START_THRESHOLD: 30
+      START_THRESHOLD: 30000
     }
     const distance = this.props.distanceToMarker
 

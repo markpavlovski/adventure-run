@@ -1,4 +1,7 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { getAllRuns } from '../actions'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { Icon } from 'react-native-elements'
 
@@ -6,19 +9,33 @@ import StatsCard from './StatsCard'
 
 const data= [1,2,3,4,5]
 
-const Stats = props => (
-  <View style={styles.stats}>
-    <View style={styles.header}>
-      <Text style={styles.headerText}>History</Text>
-    </View>
-    <FlatList
-      style={styles.content}
-      data={data}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({item}) => <StatsCard/>}
-    />
-  </View>
-)
+class Stats extends Component {
+
+  render(){
+    return (
+      <View style={styles.stats}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Activities</Text>
+        </View>
+        <FlatList
+          style={styles.content}
+          data={this.props.allRuns}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => <StatsCard data={item}/>}
+        />
+      </View>
+    )
+  }
+
+  constructor(){
+    super()
+  }
+
+  componentDidMount(){
+    this.props.getAllRuns()
+  }
+
+}
 
 const styles = StyleSheet.create({
   stats: {
@@ -46,4 +63,6 @@ const styles = StyleSheet.create({
 })
 
 
-export default Stats
+const mapDispatchToProps = dispatch => bindActionCreators({getAllRuns}, dispatch)
+const mapStateToProps = ({allRuns}) => ({allRuns})
+export default connect(mapStateToProps, mapDispatchToProps)(Stats)

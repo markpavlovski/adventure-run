@@ -9,6 +9,7 @@ export const GET_TRACK_DATA = 'GET_TRACK_DATA'
 export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 export const SET_CLOSEST_DISTANCE = 'SET_CLOSEST_DISTANCE'
+export const UPDATE_RUNS = 'UPDATE_RUNS'
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
@@ -133,5 +134,19 @@ export const setClosestDistance = (distance) => (
       type: SET_CLOSEST_DISTANCE,
       payload: {distance}
     })
+  }
+)
+
+export const getAllRuns = () => (
+  dispatch => {
+    request('/runs')
+    .then(response => {
+      const allRuns = response.data.data.reverse()
+      dispatch({
+        type: UPDATE_RUNS,
+        payload: allRuns
+      })
+    })
+    .catch(error => console.log('Error getting runs'))
   }
 )

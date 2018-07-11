@@ -8,7 +8,8 @@ import {
   LOGIN, LOGOUT,
   GET_INITIAL_CHECKPOINTS,
   GET_TRACK_DATA,
-  SET_CLOSEST_DISTANCE
+  SET_CLOSEST_DISTANCE,
+  UPDATE_RUNS
 } from './actions'
 
 
@@ -68,6 +69,13 @@ const closestCheckpointDistance = (state = Infinity, action) => {
   }
 }
 
+const allRuns = (state = [], action) => {
+  switch(action.type){
+    case UPDATE_RUNS: return action.payload
+    default: return state
+  }
+}
 
 
-export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token, closestCheckpointDistance })
+
+export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token, closestCheckpointDistance, allRuns })
