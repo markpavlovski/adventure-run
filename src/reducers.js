@@ -14,7 +14,7 @@ import {
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
-const INITIAL_PAGE = 2
+const INITIAL_PAGE = 3
 const INITIAL_SCROLL_ITEM = 0
 
 
