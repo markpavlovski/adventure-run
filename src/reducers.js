@@ -10,7 +10,8 @@ import {
   GET_INITIAL_CHECKPOINTS,
   GET_TRACK_DATA,
   SET_CLOSEST_DISTANCE,
-  UPDATE_RUNS
+  UPDATE_RUNS,
+  UPDATE_BADGES,
 } from './actions'
 
 
@@ -76,6 +77,13 @@ const allRuns = (state = [], action) => {
   }
 }
 
+const allBadges = (state = [], action) => {
+  switch(action.type){
+    case UPDATE_BADGES: return action.payload
+    default: return state
+  }
+}
 
 
-export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token, closestCheckpointDistance, allRuns })
+
+export default combineReducers({ activePage, activeScrollItem, trackData, activeCheckpoints, token, closestCheckpointDistance, allRuns, allBadges})

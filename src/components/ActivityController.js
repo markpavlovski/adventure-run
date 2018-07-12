@@ -12,7 +12,7 @@ import { CHECKPOINT_COLLISION_RADIUS } from '../settings'
 
 import CustomButton from './CustomButton'
 import { getDistance } from '../helpers'
-import {updateActiveCheckpoints} from '../actions'
+import {updateActiveCheckpoints, postRunData} from '../actions'
 
 
 
@@ -114,14 +114,16 @@ class ActivityController extends Component {
     console.log('final distance', this.distance)
     const distance = (this.distance/1000).toFixed(2)
     const track_id = this.checkpoints[0].track_id
+    const badge_ids = this.assignBadges()
     const runData = {
       track_id,
     	distance,
     	'time': this.finalDisplayTime,
     	'path': JSON.stringify(this.coordinates),
-    	times
+    	times,
+      badge_ids
     }
-    request('/runs','post',runData)
+    this.props.postRunData(runData)
     this.playSound(this.sounds.SUBMIT)
     this.props.setShowCompleted(false)
   }
@@ -217,6 +219,10 @@ class ActivityController extends Component {
     }
   }
 
+  assignBadges = () => {
+    return [1]
+  }
+
 }
 
 
@@ -240,6 +246,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints}, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators({updateActiveCheckpoints, postRunData}, dispatch)
 const mapStateToProps = ({trackData, activeCheckpoints}) => ({trackData, activeCheckpoints})
 export default connect(mapStateToProps,mapDispatchToProps)(ActivityController)

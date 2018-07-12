@@ -10,6 +10,7 @@ export const LOGIN = 'LOGIN'
 export const LOGOUT = 'LOGOUT'
 export const SET_CLOSEST_DISTANCE = 'SET_CLOSEST_DISTANCE'
 export const UPDATE_RUNS = 'UPDATE_RUNS'
+export const UPDATE_BADGES = 'UPDATE_BADGES'
 
 const LATITUDE_DELTA =  0.04
 const LONGITUDE_DELTA =  0.04
@@ -148,5 +149,40 @@ export const getAllRuns = () => (
       })
     })
     .catch(error => console.log('Error getting runs'))
+  }
+)
+
+export const getAllBadges = () => (
+  dispatch => {
+    request('/badges')
+    .then(response => {
+      const allBadges = response.data.data
+      .reduce((acc,badge)=>{
+        if (acc[badge.id]){
+          acc[badge.id].count++
+        } else {
+          acc[badge.id] = {
+            id: badge.id,
+            name: badge.name,
+            description: badge.description,
+            count: 1
+          }
+        }
+        return acc
+      },{})
+      dispatch({
+        type: UPDATE_BADGES,
+        payload: Object.values(allBadges)
+      })
+    })
+    .catch(error => console.log('Error getting runs'))
+  }
+)
+
+
+export const postRunData = (runData) => (
+  dispatch => {
+    request('/runs','post',runData)
+    .catch(error => console.log('Error posting run data'))
   }
 )

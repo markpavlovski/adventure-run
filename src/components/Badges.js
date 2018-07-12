@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { getAllRuns } from '../actions'
+import { getAllBadges } from '../actions'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { Icon } from 'react-native-elements'
 
@@ -15,9 +15,9 @@ class Badges extends Component {
       <View style={styles.stats}>
         <FlatList
           style={styles.content}
-          data={[this.title,...this.props.allRuns]}
+          data={[this.title,...this.props.allBadges]}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => item.isTitle ? this.renderTitle() : <StatsCard data={item}/>}
+          renderItem={({item}) => item.isTitle ? this.renderTitle() : <Text>{item.count} x {item.name}</Text>}
         />
       </View>
     )
@@ -25,7 +25,7 @@ class Badges extends Component {
 
   renderTitle = () => (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Activities</Text>
+      <Text style={styles.headerText}>Badges</Text>
     </View>
   )
 
@@ -37,7 +37,7 @@ class Badges extends Component {
   }
 
   componentDidMount(){
-    this.props.getAllRuns()
+    this.props.getAllBadges()
   }
 
 }
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
 })
 
 
-const mapDispatchToProps = dispatch => bindActionCreators({getAllRuns}, dispatch)
-const mapStateToProps = ({allRuns}) => ({allRuns})
+const mapDispatchToProps = dispatch => bindActionCreators({getAllBadges}, dispatch)
+const mapStateToProps = ({allBadges}) => ({allBadges})
 export default connect(mapStateToProps, mapDispatchToProps)(Badges)
