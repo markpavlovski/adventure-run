@@ -7,28 +7,33 @@ import { Icon } from 'react-native-elements'
 
 import StatsCard from './StatsCard'
 
-const data= [1,2,3,4,5]
 
 class Stats extends Component {
 
   render(){
     return (
       <View style={styles.stats}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Activities</Text>
-        </View>
         <FlatList
           style={styles.content}
-          data={this.props.allRuns}
+          data={[this.title,...this.props.allRuns]}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <StatsCard data={item}/>}
+          renderItem={({item}) => item.isTitle ? this.renderTitle() : <StatsCard data={item}/>}
         />
       </View>
     )
   }
 
+  renderTitle = () => (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>Activities</Text>
+    </View>
+  )
+
   constructor(){
     super()
+    this.title = {
+      isTitle: true
+    }
   }
 
   componentDidMount(){
@@ -49,6 +54,11 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgb(55,130,135)',
     justifyContent: 'flex-end',
     padding: 20,
+    paddingTop: 0,
+    marginBottom: 40,
+    marginTop: -15,
+    marginLeft: -15,
+    marginRight: -15,
   },
   headerText: {
     color: 'white',

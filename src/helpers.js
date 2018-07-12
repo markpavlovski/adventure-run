@@ -93,23 +93,8 @@ class AuthService{
 }
 export const AuthenticationService = new AuthService()
 
-//
-// retrieveData = async () => {
-//   try {
-//     const value = await AsyncStorage.getItem('token');
-//     if (value !== null) {
-//       // We have data!!
-//       console.log(value);
-//     }
-//    } catch (error) {
-//      // Error retrieving data
-//    }
-// }
 
 
-// REACT_APP_BACKEND='http://10.0.0.85:3000'
-// REACT_APP_BACKEND='http://10.5.82.230:3000'
-// REACT_APP_BACKEND='https://adventure-run-backend.herokuapp.com'
 
 export const request = (path, method = 'get', body = null) => {
   let bearerToken = ''
