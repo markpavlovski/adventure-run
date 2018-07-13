@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native"
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { logout, getAllRuns } from '../actions'
+import { hhmmssToSeconds, secondsToHhmmss } from '../helpers'
 
 
 class Me extends Component {
@@ -16,7 +17,7 @@ class Me extends Component {
     return (
       <View style={{flex: 1, backgroundColor: '#EB5E55', justifyContent: 'flex-end'}}>
         <Text style={{color: 'white'}}>{this.totalDistance(runData)} km</Text>
-        <Text style={{color: 'white'}}>{this.totalTime(runData)} km</Text>
+        <Text style={{color: 'white'}}>{this.totalTime(runData)}</Text>
         <View
           style={{
             zIndex: 99,
@@ -51,11 +52,10 @@ class Me extends Component {
   totalDistance = runData => runData.reduce((acc,run)=>acc+parseFloat(run.distance), 0).toFixed(2)
 
   totalTime = runData => {
-    const runTimes = runData.map(run => run.time)
-    return runTimes[0]
-    // return runData.reduce((acc,run)=>{
-    //   return acc+parseFloat(run.distance)
-    // }, 0)
+    const totalTime = runData
+      .map(run => hhmmssToSeconds(run.time))
+      .reduce((acc,time)=>acc+time,0)
+    return secondsToHhmmss(totalTime)
   }
 
 

@@ -6,18 +6,23 @@ import { StyleSheet, Text, View, FlatList } from 'react-native'
 import { Icon } from 'react-native-elements'
 
 import StatsCard from './StatsCard'
+import RunCard from './RunCard'
+import RunCardBlank from './RunCardBlank'
 
 
 class Stats extends Component {
 
+
   render(){
+    const renderList = [this.title,<RunCardBlank/>,...this.props.allRuns.map(run => <RunCard data={run}/>),<RunCardBlank/>]
+
     return (
       <View style={styles.stats}>
         <FlatList
           style={styles.content}
-          data={[this.title,...this.props.allRuns]}
+          data={renderList}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => item.isTitle ? this.renderTitle() : <StatsCard data={item}/>}
+          renderItem={({item}) => item.isTitle ? this.renderTitle() : item}
         />
       </View>
     )
@@ -48,17 +53,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    height: 120,
+    height: 100,
     backgroundColor: '#378287',
     borderBottomWidth: 1,
     borderBottomColor: 'rgb(55,130,135)',
     justifyContent: 'flex-end',
     padding: 20,
     paddingTop: 0,
-    marginBottom: 40,
+    marginBottom: 0,
     marginTop: -15,
     marginLeft: -15,
     marginRight: -15,
+    shadowColor: 'black',
+    shadowOpacity: .4,
+    shadowRadius: 25,
+    shadowOffset: {height: 15},
   },
   headerText: {
     color: 'white',

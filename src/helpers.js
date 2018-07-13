@@ -29,6 +29,7 @@ export const validateBadge = (badgeId, runData) => {
   return true
 }
 
+
 export const hhmmssToSeconds = hhmmss => {
   const date = hhmmss.split(':').map(el=>parseInt(el))
   const seconds = date[0]*60*60 + date[1]*60 + date[2]

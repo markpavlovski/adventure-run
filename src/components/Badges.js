@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    height: 120,
+    height: 100,
     backgroundColor: '#378287',
     borderBottomWidth: 1,
     borderBottomColor: 'rgb(55,130,135)',
@@ -59,6 +59,10 @@ const styles = StyleSheet.create({
     marginTop: -15,
     marginLeft: -15,
     marginRight: -15,
+    shadowColor: 'black',
+    shadowOpacity: .4,
+    shadowRadius: 25,
+    shadowOffset: {height: 15},
   },
   headerText: {
     color: 'white',
