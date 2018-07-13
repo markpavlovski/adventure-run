@@ -40,7 +40,7 @@ class StatsCard extends Component {
         <Text>{time}</Text>
         <Text>{distance}</Text>
         <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text>
-        {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)}
+        {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
         <StatsMap path={path} checkpoints={checkpoints} latlong={latlong}/>
       </View> : null
       }

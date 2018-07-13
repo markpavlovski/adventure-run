@@ -20,26 +20,49 @@ class RunCard extends Component {
       path
     } = this.props.data
 
-    return (
-      <View style={styles.runCard}>
+    const completed = !checkpoints.find(el => !el.checkpoint_time)
 
-        <View style={styles.date}>
-          <Text>{moment(created_at).format("ddd")}</Text>
-          <Text>{moment(created_at).format("MMM DD")}</Text>
+    return (
+      <View style={styles.runCard} onPress={this.toggleDetails}>
+
+        <View style={styles.date} onPress={this.toggleDetails}>
+          <Text onPress={this.toggleDetails}>{moment(created_at).format("ddd")}</Text>
+          <Text onPress={this.toggleDetails}>{moment(created_at).format("MMM DD")}</Text>
         </View>
 
-        <TouchableWithoutFeedback style={styles.imageContainer}>
+        <TouchableWithoutFeedback style={styles.imageContainer} onPress={this.toggleDetails}>
           <Image
             style={styles.image}
             source={{uri: getPath(latlong)}}
           />
         </TouchableWithoutFeedback>
-        <View style={styles.trackTitle}>
-          <Text>{name}</Text>
+         <View style={styles.trackTitle} onPress={this.toggleDetails}>
+          <Text onPress={this.toggleDetails}>{name}</Text>
+          {this.state.isOpen ? <View style={styles.content} onPress={this.toggleDetails}>
+
+            <Text>{time}</Text>
+            <Text>{distance}</Text>
+            <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text>
+            {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
+            <StatsMap path={path} checkpoints={checkpoints} latlong={latlong}/>
+
+          </View> : null}
         </View>
       </View>
     )
 
+  }
+
+  constructor (){
+    super()
+    this.state = {
+      isOpen: false
+    }
+  }
+
+  toggleDetails = () => {
+    console.log('pressed')
+    this.setState({isOpen: !this.state.isOpen})
   }
 
 }
@@ -91,7 +114,7 @@ const styles = StyleSheet.create({
   trackTitle: {
     flex: 1,
     borderLeftWidth: 2,
-    height: 110,
+    minHeight: 110,
     marginLeft: -40,
     zIndex: -1,
     justifyContent: 'center',
@@ -112,6 +135,10 @@ const styles = StyleSheet.create({
     width: 55,
     alignItems: 'center',
     paddingRight: 10
+  },
+  content: {
+    // height: 200,
+    // backgroundColor: 'rgba(0,0,0,0.05)'
   }
 })
 
