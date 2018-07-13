@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, Dimensions } from "react-native"
 import { Constants, Location, Permissions, Audio  } from "expo";
 import { Icon } from 'react-native-elements'
 import moment from 'moment'
-import { request } from '../helpers'
+import { request, validateBadge } from '../helpers'
 import { CHECKPOINT_COLLISION_RADIUS } from '../settings'
 
 
@@ -114,16 +114,17 @@ class ActivityController extends Component {
     console.log('final distance', this.distance)
     const distance = (this.distance/1000).toFixed(2)
     const track_id = this.checkpoints[0].track_id
-    const badge_ids = this.assignBadges()
+    const time = this.finalDisplayTime
+    const path = JSON.stringify(this.coordinates)
     const runData = {
       track_id,
     	distance,
-    	'time': this.finalDisplayTime,
-    	'path': JSON.stringify(this.coordinates),
-    	times,
-      badge_ids
+    	time,
+    	path,
+    	times
     }
-    this.props.postRunData(runData)
+    const badge_ids = this.assignBadges(runData)
+    this.props.postRunData({...runData, badge_ids})
     this.playSound(this.sounds.SUBMIT)
     this.props.setShowCompleted(false)
   }
@@ -219,8 +220,14 @@ class ActivityController extends Component {
     }
   }
 
-  assignBadges = () => {
-    return [1]
+  assignBadges = (runData) => {
+    const id = this.checkpoints[0].track_id - 1
+    const trackData = this.props.trackData.find(track => track.id === id )
+    const trackBadges = trackData.badges
+    const receivedBadges = trackBadges
+      .filter(badge => validateBadge(badge.id, runData))
+      .map(badge => badge.id)
+    return receivedBadges
   }
 
 }

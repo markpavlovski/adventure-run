@@ -24,6 +24,34 @@ export const getDistance = (a,b) => {
 }
 
 
+export const validateBadge = (badgeId, runData) => {
+  const { distance, time, path, times } = runData
+  return true
+}
+
+export const hhmmssToSeconds = hhmmss => {
+  const date = hhmmss.split(':').map(el=>parseInt(el))
+  const seconds = date[0]*60*60 + date[1]*60 + date[2]
+  return seconds
+}
+
+export const secondsToHhmmss = seconds => {
+  let hours = `${Math.floor(seconds / 3600)}`
+  hours = hours < 10 ? '0'+hours : hours
+
+  let minutes = Math.floor(seconds / 60) % 60
+  minutes = minutes < 10 ? '0'+minutes : minutes
+
+  let secs = seconds % 60
+  secs = secs < 10 ? '0'+ secs : secs
+
+  return `${hours}:${minutes}:${secs}`
+}
+
+
+
+
+
 class AuthenticationWrapper extends Component{
   constructor(props){
     super(props)
