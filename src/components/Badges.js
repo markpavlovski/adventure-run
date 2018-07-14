@@ -89,28 +89,13 @@ class Badges extends Component {
       <View style={styles.container}>
 
         <View style={styles.header}>
-          <View style={styles.imageContainer}>
-            <Image style={styles.image}
-              source={require('../assets/dandog.jpg')}
-            />
-          </View>
-          <Text style={styles.name}>Dan Dog</Text>
-          <Text style={styles.city}>Seattle, WA</Text>
+          <Text style={styles.pageTitle}>Achievements</Text>
         </View>
 
         <View style={styles.feature}>
-          <View style={styles.featureBlock}>
-            <Text style={styles.featureBlockText}>Miles</Text>
-            <Text style={styles.featureBlockValue}>120.2</Text>
-          </View>
-          <View style={styles.featureBlock}>
-            <Text style={styles.featureBlockText}>Runs</Text>
-            <Text style={styles.featureBlockValue}>23</Text>
-          </View>
-          <View style={styles.featureBlock}>
-            <Text style={styles.featureBlockText}>Hours</Text>
-            <Text style={styles.featureBlockValue}> 25.2</Text>
-          </View>
+          <Image style={styles.image}
+            source={require('../assets/badge.png')}
+          />
         </View>
 
         <View style={styles.content}>
@@ -146,61 +131,51 @@ const SCREEN_WIDTH = Dimensions.get("window").width
 
 const styles = StyleSheet.create({
   header: {
-    flex: 6,
+    flex: 5,
+    marginTop: -SCREEN_WIDTH*.25,
+    width:SCREEN_WIDTH*1.5,
+    alignSelf: 'center',
     backgroundColor: '#378287',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 60
+    borderRadius: SCREEN_WIDTH*1.25
   },
   feature: {
-    height: 120,
+    height: SCREEN_WIDTH*.7,
     backgroundColor: 'white',
-    width: SCREEN_WIDTH*.9,
+    width: SCREEN_WIDTH*.7,
     alignSelf: 'center',
-    marginTop: -60,
+    marginTop: -SCREEN_WIDTH*.7*.5,
     zIndex: 999,
-    borderRadius: 10,
+    borderRadius: SCREEN_WIDTH*.7/2,
     borderColor: '#378287',
     shadowColor: 'black',
     shadowRadius: 20,
     shadowOpacity: .3,
     shadowOffset: {width: 0, height: 30},
     flexDirection: 'row',
-    paddingLeft: 20,
-    paddingRight: 20
   },
   content: {
-    flex: 4,
+    flex: 5,
     backgroundColor: 'white',
-    marginTop: -60,
+    marginTop: -SCREEN_WIDTH*.7/2,
     justifyContent: 'flex-end',
     alignContent: 'center'
   },
   container: {
     flex: 1,
   },
-  imageContainer: {
-    width: 140,
-    height: 140,
-    borderWidth: 3,
-    borderRadius: 70,
-    borderColor: 'white',
-    marginTop: -50,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   image: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    borderWidth: 4,
-    borderColor: 'white',
+    width: SCREEN_WIDTH*.7,
+    height: SCREEN_WIDTH*.7,
+    borderRadius: SCREEN_WIDTH*.7/2,
   },
-  name: {
+  pageTitle: {
     color: 'white',
-    marginTop: 15,
-    fontWeight: 'bold',
-    fontSize: 18
+    marginTop: -20,
+    fontWeight: '300',
+    fontSize: 32,
+    letterSpacing: 2,
   },
   city: {
     color: 'white',
