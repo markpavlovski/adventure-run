@@ -11,6 +11,7 @@ class RunCard extends Component {
   render(){
 
     const {
+      run_shortid,
       created_at,
       latlong,
       name,
@@ -30,7 +31,7 @@ class RunCard extends Component {
           <Text style={styles.month} onPress={this.toggleDetails}>{moment(created_at).format("MMM DD")}</Text>
         </View>
 
-        <TouchableWithoutFeedback style={styles.imageContainer} onPress={this.toggleDetails}>
+        <TouchableWithoutFeedback style={styles.imageContainer} onPress={() => this.toggleDetails(run_shortid)}>
           <Image
             style={styles.image}
             source={{uri: getPath(latlong)}}
@@ -60,9 +61,8 @@ class RunCard extends Component {
     }
   }
 
-  toggleDetails = () => {
-    console.log('pressed')
-    this.setState({isOpen: !this.state.isOpen})
+  toggleDetails = (shortid) => {
+    this.props.toggleInfo(shortid)
   }
 
 }
