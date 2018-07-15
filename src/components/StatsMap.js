@@ -11,7 +11,7 @@ class StatsMap extends Component {
         provider='google'
         style={styles.map}
         initialRegion={this.state.region}
-        ref={ref => { this.mapView = ref }}
+        ref={ref => { this.statsMapView = ref }}
         onRegionChange	= {region => this.setState({region})}
       >
         {this.renderCheckpoints(this.props.checkpoints)}
@@ -39,9 +39,35 @@ class StatsMap extends Component {
         longitudeDelta: 0.03,
       }
     }
+    this.statsMapView = null
+  }
+
+  componentDidMount(){
+    console.log('!>', this.props.checkpoints)
+    this.initialTimeout = setTimeout(() => this.fitToMarkers(this.props.checkpoints), 300)
+    console.log('mounted');
+    this.props.registerCallback(this.fitToMarkers)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.initialTimeout)
+  }
+
+
+  fitToMarkers = (locations = this.props.checkpoints) => {
+    coordinates = locations.map(location => this.getLatLong(location.latlong))
+    this.statsMapView.fitToCoordinates(coordinates, {
+      edgePadding: {
+        top: 50,
+        right: 40,
+        bottom: 50,
+        left: 40
+      }
+    })
   }
 
   renderCheckpoints = (checkpoints) => {
+    console.log('!?!?!?',`${this.statsMapView}`)
     return checkpoints.map((checkpoint,idx) => (
       <MapView.Marker
         coordinate={this.getLatLong(checkpoint.latlong)}
@@ -65,8 +91,8 @@ class StatsMap extends Component {
 
 const styles = StyleSheet.create({
   map: {
-    flex: 1,
-    // height: 200,
+    // flex: 1,
+    height: 250,
     marginBottom: -30
   }
 })

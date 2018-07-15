@@ -27,6 +27,9 @@ class Stats extends Component {
       <RunCardBottom/>
     ]
 
+    const allRuns = this.props.allRuns
+
+    const activeRun = allRuns.length ? this.findActiveRun(allRuns) : {}
 
     const {
       run_shortid,
@@ -37,7 +40,7 @@ class Stats extends Component {
       distance,
       checkpoints,
       path
-    } = this.props.allRuns.length ? this.props.allRuns[0] : {}
+    } = activeRun
 
     return (
       <View style={styles.stats}>
@@ -47,7 +50,7 @@ class Stats extends Component {
             <Text>{distance}</Text>
             <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text> */}
             {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
-            {latlong ? <StatsMap path={path} checkpoints={checkpoints} latlong={latlong}/> : null}
+            {latlong ? <StatsMap path={path} checkpoints={checkpoints} latlong={latlong} registerCallback={this.registerCallback}/> : null}
           </View>
           <View style={styles.displayBox}></View>
         </View>
@@ -66,14 +69,23 @@ class Stats extends Component {
   constructor(){
     super()
     this.state = {
-      activeId: 1
+      activeId: false
     }
+    this.fitToMarkers = _ => _
   }
 
   toggleInfo = (shortid) => {
-    if (this.state.activeId) this.setState({ activeId: null})
-    else this.setState({activeId: shortid})
+    this.setState({activeId: shortid})
+    this.markerTimeout = setTimeout(() => this.fitToMarkers())
     console.log(shortid)
+  }
+
+  findActiveRun = (allRuns) => {
+    return allRuns.find(run => run.run_shortid === this.state.activeId) || allRuns[0]
+  }
+
+  registerCallback = fitToMarkers => {
+    this.fitToMarkers = fitToMarkers
   }
 
 
@@ -81,6 +93,10 @@ class Stats extends Component {
 
   componentDidMount(){
     this.props.getAllRuns()
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.markerTimeout)
   }
 
 }

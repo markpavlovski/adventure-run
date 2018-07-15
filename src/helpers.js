@@ -34,7 +34,7 @@ export const badges = {
   '8': require('./assets/badge8.png'),
   '9': require('./assets/badge9.png'),
   '10': require('./assets/badge10.png'),
-  '11': require('./assets/badge11.png'),  
+  '11': require('./assets/badge11.png'),
 }
 
 
@@ -63,6 +63,15 @@ export const secondsToHhmmss = seconds => {
   return `${hours}:${minutes}:${secs}`
 }
 
+
+export const getLatLong = latlong => {
+  return (
+    {
+      latitude: latlong.split(', ')[0]*1,
+      longitude: latlong.split(', ')[1]*1
+    }
+  )
+}
 
 
 
