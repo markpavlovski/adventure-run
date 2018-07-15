@@ -23,10 +23,12 @@ class LoginScreen extends Component {
         style={{flex: 1, padding: 30, justifyContent: 'space-around', backgroundColor: 'rgba(55,130,135,.9)'}}
         >
         {this.state.showButtons ? <Image
-          style={{width: 250, height: 250, margin: 'auto', alignSelf: 'center'}}
+          style={{width: 180, height: 200, margin: 'auto', alignSelf: 'center'}}
           // source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
-          source={require('../assets/adventure_run.png')}
+          // source={require('../assets/adventure_run.png')}
+          source={require('../assets/shield_logo.png')}
         /> : null }
+        {this.state.showButtons ? <Text style={styles.title}>ADVENTURE RUN</Text>: null }
         <View style={{}}>
         <TextInput
           style={{height: 40, borderColor: 'white', borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5, color: 'white'}}
@@ -50,24 +52,9 @@ class LoginScreen extends Component {
         />
       </View>
       {this.state.showButtons ? <View
-        style={{
-          zIndex: 99,
-          borderRadius: 30,
-          justifyContent: 'center',
-          margin: 20,
-          padding: 10,
-          borderWidth: 1,
-          borderColor: 'white',
-        }}
+        style={styles.loginButton}
       >
-        <Text style={{
-          textAlign: 'center',
-          fontWeight: 'bold',
-          fontSize: 16,
-          color: 'white'
-
-
-        }}
+        <Text style={styles.loginText}
         onPress={()=>{
           console.log('hi')
           const {email, password} = this.state
@@ -88,6 +75,38 @@ class LoginScreen extends Component {
     this.setState({showButtons: true})
   }
 }
+
+
+const styles = StyleSheet.create({
+  header: {
+    flex: 6,
+    backgroundColor: '#378287',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  title: {
+    textAlign: 'center',
+    fontWeight: '400',
+    fontSize: 22,
+    color: 'white',
+    letterSpacing: 2,
+    marginBottom: 20,
+  },
+  loginText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#378287'
+  },
+  loginButton: {
+    zIndex: 99,
+    borderRadius: 20,
+    justifyContent: 'center',
+    margin: 20,
+    padding: 10,
+    backgroundColor: 'white'
+  }
+})
 
 
 const mapDispatchToProps = dispatch => bindActionCreators({login}, dispatch)

@@ -146,13 +146,13 @@ const styles = StyleSheet.create({
   },
   logout: {
     textAlign: 'center',
-    fontSize: 14,
-    color: '#378287',
+    fontSize: 17,
+    color: '#c62828',
     marginBottom: 30
   },
   guild: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 17,
     color: '#378287',
     marginBottom: 30
   }
