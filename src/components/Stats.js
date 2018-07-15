@@ -2,37 +2,36 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getAllRuns } from '../actions'
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Dimensions } from 'react-native'
 import { Icon } from 'react-native-elements'
 
 import StatsCard from './StatsCard'
 import RunCard from './RunCard'
-import RunCardBlank from './RunCardBlank'
+import RunCardTop from './RunCardTop'
+import RunCardBottom from './RunCardBottom'
 
 
 class Stats extends Component {
 
 
   render(){
-    const renderList = [this.title,<RunCardBlank/>,...this.props.allRuns.map(run => <RunCard data={run}/>),<RunCardBlank/>]
+    const renderList = [<RunCardTop/>,...this.props.allRuns.map(run => <RunCard data={run}/>),<RunCardBottom/>]
 
     return (
       <View style={styles.stats}>
+        <View style={styles.header}>
+          <View style={styles.displayBox}></View>
+        </View>
         <FlatList
           style={styles.content}
           data={renderList}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => item.isTitle ? this.renderTitle() : item}
+          renderItem={({item}) => item}
         />
       </View>
     )
   }
 
-  renderTitle = () => (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>Activities</Text>
-    </View>
-  )
 
   constructor(){
     super()
@@ -41,11 +40,16 @@ class Stats extends Component {
     }
   }
 
+
+
   componentDidMount(){
     this.props.getAllRuns()
   }
 
 }
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+
 
 const styles = StyleSheet.create({
   stats: {
@@ -53,21 +57,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    height: 250,
+    height: 300,
     backgroundColor: '#378287',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgb(55,130,135)',
     justifyContent: 'flex-end',
-    padding: 20,
-    paddingTop: 0,
     marginBottom: 0,
     marginTop: -15,
     marginLeft: -15,
     marginRight: -15,
-    // shadowColor: 'black',
-    // shadowOpacity: .4,
-    // shadowRadius: 25,
-    // shadowOffset: {height: 15},
+    shadowColor: 'black',
+    shadowRadius: 20,
+    shadowOpacity: .3,
+    shadowOffset: {width: 0, height: 15},
   },
   headerText: {
     color: 'white',
@@ -78,9 +78,22 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 15,
-  }
+    paddingLeft: 15,
+    paddingRight: 15,
+    marginTop: -180,
+    marginBottom: -150,
+    zIndex: -1
+  },
+  displayBox: {
+     height: 80 ,
+     backgroundColor: 'white',
+     shadowColor: 'black',
+     shadowRadius: 20,
+     shadowOpacity: .2,
+     shadowOffset: {width: 0, height: -5},
+   }
 })
+
 
 
 const mapDispatchToProps = dispatch => bindActionCreators({getAllRuns}, dispatch)

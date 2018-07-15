@@ -6,7 +6,7 @@ import StatsMap from './StatsMap'
 
 import moment from 'moment'
 
-class RunCardBlank extends Component {
+class RunCardTop extends Component {
 
   render(){
 
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   blankTrackTitle: {
     flex: 1,
     borderLeftWidth: 2,
-    height: 30,
+    height: 200,
     marginLeft: -40,
     zIndex: -1,
     justifyContent: 'center',
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default RunCardBlank
+export default RunCardTop
