@@ -26,8 +26,8 @@ class RunCard extends Component {
       <View style={styles.runCard} onPress={this.toggleDetails}>
 
         <View style={styles.date} onPress={this.toggleDetails}>
-          <Text onPress={this.toggleDetails}>{moment(created_at).format("ddd")}</Text>
-          <Text onPress={this.toggleDetails}>{moment(created_at).format("MMM DD")}</Text>
+          <Text style={styles.day} onPress={this.toggleDetails}>{moment(created_at).format("ddd")}</Text>
+          <Text style={styles.month} onPress={this.toggleDetails}>{moment(created_at).format("MMM DD")}</Text>
         </View>
 
         <TouchableWithoutFeedback style={styles.imageContainer} onPress={this.toggleDetails}>
@@ -37,7 +37,7 @@ class RunCard extends Component {
           />
         </TouchableWithoutFeedback>
          <View style={styles.trackTitle} onPress={this.toggleDetails}>
-          <Text onPress={this.toggleDetails}>{name}</Text>
+          <Text onPress={this.toggleDetails} style={styles.trackTitleText}>{name}</Text>
           {this.state.isOpen ? <View style={styles.content} onPress={this.toggleDetails}>
 
             <Text>{time}</Text>
@@ -99,14 +99,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'rgba(55,130,135,1)',
-  },
-  blankImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    opacity: 0,
   },
   imageContainer: {
     width: 80
@@ -121,24 +115,22 @@ const styles = StyleSheet.create({
     paddingLeft: 50,
     borderColor: 'rgba(55,130,135,1)',
   },
-  blankTrackTitle: {
-    flex: 1,
-    borderLeftWidth: 2,
-    height: 50,
-    marginLeft: -40,
-    zIndex: -1,
-    justifyContent: 'center',
-    paddingLeft: 50,
-    borderColor: 'rgba(55,130,135,1)',
-  },
   date: {
     width: 55,
     alignItems: 'center',
-    paddingRight: 10
+    paddingRight: 10,
+  },
+  day: {
+    fontWeight: '600'
+  },
+  month: {
+    fontWeight: '600'
+  },
+  trackTitleText: {
+    fontWeight: '600'
   },
   content: {
-    // height: 200,
-    // backgroundColor: 'rgba(0,0,0,0.05)'
+
   }
 })
 
