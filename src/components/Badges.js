@@ -6,75 +6,6 @@ import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 
 import { Icon } from 'react-native-elements'
 
 import BadgeItem from './BadgeItem'
-//
-//
-// class Badges extends Component {
-//
-//   render(){
-//     return (
-//       <View style={styles.stats}>
-//         <FlatList
-//           style={styles.content}
-//           data={[this.title,...this.props.allBadges]}
-//           keyExtractor={(item, index) => index.toString()}
-//           renderItem={({item}) => item.isTitle ? this.renderTitle() : <Text>{item.count} x {item.name}</Text>}
-//         />
-//       </View>
-//     )
-//   }
-//
-//   renderTitle = () => (
-//     <View style={styles.header}>
-//       <Text style={styles.headerText}>Badges</Text>
-//     </View>
-//   )
-//
-//   constructor(){
-//     super()
-//     this.title = {
-//       isTitle: true
-//     }
-//   }
-//
-//   componentDidMount(){
-//     this.props.getAllBadges()
-//   }
-//
-// }
-//
-// const styles = StyleSheet.create({
-//   stats: {
-//     flex: 1,
-//     backgroundColor: 'white',
-//   },
-//   header: {
-//     height: 100,
-//     backgroundColor: '#378287',
-//     borderBottomWidth: 1,
-//     borderBottomColor: 'rgb(55,130,135)',
-//     justifyContent: 'flex-end',
-//     padding: 20,
-//     paddingTop: 0,
-//     marginBottom: 40,
-//     marginTop: -15,
-//     marginLeft: -15,
-//     marginRight: -15,
-//     shadowColor: 'black',
-//     shadowOpacity: .4,
-//     shadowRadius: 25,
-//     shadowOffset: {height: 15},
-//   },
-//   headerText: {
-//     color: 'white',
-//     fontSize: 30,
-//     letterSpacing: 2,
-//     textAlign: 'center',
-//   },
-//   content: {
-//     flex: 1,
-//     padding: 15,
-//   }
-// })
 
 
 class Badges extends Component {
@@ -100,13 +31,25 @@ class Badges extends Component {
 
         <View horizontal style={styles.content}>
           <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
-            {this.props.allBadges.map((badge,idx)=><BadgeItem style={styles.scrollItem} key={idx} data={badge}/>)}
+            {this.props.allBadges.map((badge,idx)=><BadgeItem style={styles.scrollItem} key={idx} data={badge}  toggleInfo={this.toggleInfo} info={this.state.activeId}/>)}
           </ScrollView>
         </View>
 
 
       </View>
     )
+  }
+
+  constructor(){
+    super()
+    this.state = {
+      activeId: null
+    }
+  }
+
+  toggleInfo = (id) => {
+    if (this.state.activeId) this.setState({ activeId: null})
+    else this.setState({activeId: id})
   }
 
   totalDistance = runData => runData.reduce((acc,run)=>acc+parseFloat(run.distance), 0).toFixed(2)
@@ -141,7 +84,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH*.7,
     alignSelf: 'center',
     marginTop: -SCREEN_WIDTH*.7*.5,
-    zIndex: 999,
+    zIndex: 50,
     borderRadius: SCREEN_WIDTH*.7/2,
     borderColor: '#378287',
     shadowColor: 'black',
@@ -152,10 +95,10 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 5,
-    backgroundColor: 'white',
     marginTop: -SCREEN_WIDTH*.7/2,
     justifyContent: 'flex-end',
-    alignContent: 'center'
+    alignContent: 'center',
+    zIndex: 100
   },
   container: {
     flex: 1,
@@ -169,8 +112,8 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: -20,
     fontWeight: '300',
-    fontSize: 32,
-    letterSpacing: 2,
+    fontSize: 30,
+    letterSpacing: 3,
   },
   city: {
     color: 'white',
@@ -196,7 +139,6 @@ const styles = StyleSheet.create({
     marginBottom: 40
   },
   scrollview: {
-    // backgroundColor: 'red',
   },
   scrollItem: {
     width: 100,

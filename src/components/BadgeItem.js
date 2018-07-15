@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getAllBadges } from '../actions'
-import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Dimensions, Image, TouchableWithoutFeedback, ScrollView } from 'react-native'
 import { Icon } from 'react-native-elements'
 import { badges } from '../helpers'
 
@@ -10,15 +10,26 @@ import { badges } from '../helpers'
 class BadgeItem extends Component {
 
   render(){
-    console.log(this.props.data)
-    const id = this.props.data.id
-    const count = this.props.data.count
+    const {id, count, name, description} = this.props.data
     return (
       <View style={styles.container}>
+        {this.props.info === id
+          ? <View style = {styles.info}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={styles.infoScrollView}
+              >
+                <Text style={styles.infoTitle}>{name}</Text>
+                <Text style={styles.infoText}>{description}</Text>
+              </ScrollView>
+            </View>
+
+          : null
+        }
         <View style={styles.feature}>
-          <Image style={styles.image}
-            source={badges[id]}
-          />
+          <TouchableWithoutFeedback onPress={()=>{this.props.toggleInfo(id)}}>
+            <Image style={styles.image} source={badges[id]} />
+          </TouchableWithoutFeedback>
         </View>
         <Text style={styles.badgeCount}>{count}</Text>
 
@@ -26,7 +37,9 @@ class BadgeItem extends Component {
     )
   }
 
-
+  constructor(){
+    super()
+  }
 
 }
 
@@ -38,7 +51,7 @@ const styles = StyleSheet.create({
     height: WIDTH*.7,
     width: WIDTH*.7,
     alignSelf: 'center',
-    zIndex: 999,
+    zIndex: 50,
     borderRadius: WIDTH*.7/2,
     borderColor: '#378287',
     shadowColor: 'black',
@@ -54,7 +67,6 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     alignSelf: 'flex-end',
     borderRadius: 20,
-    overflow: 'hidden'
   },
   image: {
     width: WIDTH*.7,
@@ -66,7 +78,33 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 20,
     paddingTop: 10
-  }
+  },
+  info: {
+    marginTop: -110,
+    height: 100,
+    width: 90,
+    backgroundColor: 'white',
+    zIndex: 99,
+    alignSelf: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: 'black',
+    shadowRadius: 6,
+    shadowOpacity: .3,
+    shadowOffset: {height: 5},
+  },
+   infoScrollView: {
+     padding: 8
+   },
+   infoTitle: {
+     fontWeight: '700',
+     fontSize: 12,
+     paddingTop: 5,
+     paddingBottom: 5
+   },
+   infoText: {
+     fontSize: 12,
+   }
 })
 
 
