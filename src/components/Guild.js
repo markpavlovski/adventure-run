@@ -32,13 +32,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 2,
     padding: 40,
+    paddingTop: 80,
     color: 'rgba(0,0,0,0.4)'
   },
   premium: {
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 1,
-    padding: 40,
+    paddingTop: 80,
+    paddingBottom: 80,
     color: '#378287',
 
   }

@@ -23,10 +23,10 @@ class LoginScreen extends Component {
         style={{flex: 1, padding: 30, justifyContent: 'space-around', backgroundColor: 'rgba(55,130,135,.9)'}}
         >
         {this.state.showButtons ? <Image
-          style={{width: 180, height: 200, margin: 'auto', alignSelf: 'center'}}
+          style={styles.logo}
           // source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
           // source={require('../assets/adventure_run.png')}
-          source={require('../assets/shield_logo.png')}
+          source={require('../assets/simple_logo.png')}
         /> : null }
         {this.state.showButtons ? <Text style={styles.title}>ADVENTURE RUN</Text>: null }
         <View style={{}}>
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontWeight: '400',
-    fontSize: 22,
+    fontSize: 20,
     color: 'white',
     letterSpacing: 2,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   loginText: {
     textAlign: 'center',
@@ -105,6 +105,13 @@ const styles = StyleSheet.create({
     margin: 20,
     padding: 10,
     backgroundColor: 'white'
+  },
+  logo: {
+    width: 115,
+    height: 84,
+    alignSelf: 'center',
+    marginTop: 70,
+    marginBottom: 70
   }
 })
 

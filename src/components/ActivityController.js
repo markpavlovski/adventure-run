@@ -61,8 +61,8 @@ class ActivityController extends Component {
     this.sounds = {
       START: require('../assets/start.wav'),
       CHECKPOINT: require('../assets/checkpoint.mp3'),
-      STOP: require('../assets/stop.wav'),
-      SUBMIT: require('../assets/start.wav')
+      STOP: require('../assets/checkpoint.mp3'),
+      SUBMIT: require('../assets/checkpoint.mp3')
     }
     this.checkpoints = props.activeCheckpoints
       .map((cp,idx) => ({...cp, visited: false, timeStamp: null, distance: 0}))
