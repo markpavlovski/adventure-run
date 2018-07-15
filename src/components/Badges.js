@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getAllBadges } from '../actions'
-import { StyleSheet, Text, View, FlatList, Dimensions, Image } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Dimensions, Image, ScrollView } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-import StatsCard from './StatsCard'
+import BadgeItem from './BadgeItem'
 //
 //
 // class Badges extends Component {
@@ -80,7 +80,7 @@ import StatsCard from './StatsCard'
 class Badges extends Component {
 
   componentDidMount(){
-    // this.props.getAllRuns()
+    this.props.getAllBadges()
   }
 
   render(){
@@ -98,15 +98,10 @@ class Badges extends Component {
           />
         </View>
 
-        <View style={styles.content}>
-          <Text style={styles.logout}
-          onPress={()=>{
-            // console.log('goodbye:',this.props.token)
-            // this.props.logout()
-          }}
-          >
-            Logout
-          </Text>
+        <View horizontal style={styles.content}>
+          <ScrollView horizontal style={styles.scrollview} showsHorizontalScrollIndicator={false}>
+            {this.props.allBadges.map((badge,idx)=><BadgeItem style={styles.scrollItem} key={idx} data={badge}/>)}
+          </ScrollView>
         </View>
 
 
@@ -199,6 +194,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#378287',
     marginBottom: 40
+  },
+  scrollview: {
+    // backgroundColor: 'red',
+  },
+  scrollItem: {
+    width: 100,
+    height: 120,
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    margin: 10,
+    marginBottom: 25,
+    alignSelf: 'flex-end',
+    borderRadius: 20
   }
 
 })

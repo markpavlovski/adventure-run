@@ -23,6 +23,20 @@ export const getDistance = (a,b) => {
   return d
 }
 
+export const badges = {
+  '1': require('./assets/badge1.png'),
+  '2': require('./assets/badge2.png'),
+  '3': require('./assets/badge3.png'),
+  '4': require('./assets/badge4.png'),
+  '5': require('./assets/badge5.png'),
+  '6': require('./assets/badge6.png'),
+  '7': require('./assets/badge7.png'),
+  '8': require('./assets/badge8.png'),
+  '9': require('./assets/badge9.png'),
+  '10': require('./assets/badge10.png'),
+  '11': require('./assets/badge11.png'),  
+}
+
 
 export const validateBadge = (badgeId, runData) => {
   const { distance, time, path, times } = runData
