@@ -39,20 +39,30 @@ class Stats extends Component {
       time,
       distance,
       checkpoints,
-      path
+      path,
     } = activeRun
+
+    const completed = checkpoints ? !checkpoints.find(el => !el.checkpoint_time) : false
+
 
     return (
       <View style={styles.stats}>
         <View style={styles.header}>
           <View style={styles.mapContainer}>
-            {/* <Text>{time}</Text>
-            <Text>{distance}</Text>
-            <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text> */}
-            {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
-            {latlong ? <StatsMap path={path} checkpoints={checkpoints} latlong={latlong} registerCallback={this.registerCallback}/> : null}
+            {latlong ? <StatsMap path={path} checkpoints={checkpoints} latlong={latlong} registerCallback={this.registerCallback} fit={this.fitToMarkers}/> : null}
           </View>
-          <View style={styles.displayBox}></View>
+          <View style={styles.displayBox}>
+            <Text style={styles.trackName}>{name}</Text>
+            <Text style={styles.runStartTime}>{moment(created_at).format("ddd MMM DD, h:mm a")}</Text>
+            <View style={styles.runStats}>
+              <Text style={styles.runStat}>{time}</Text>
+              <Text style={styles.runStat}>{distance} mi</Text>
+              <Text style={styles.runStat}>{completed ? 'Complete' : 'Incomplete'}</Text>
+            </View>
+            {/* <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text> */}
+            {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
+
+          </View>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -76,7 +86,7 @@ class Stats extends Component {
 
   toggleInfo = (shortid) => {
     this.setState({activeId: shortid})
-    this.markerTimeout = setTimeout(() => this.fitToMarkers())
+    this.markerTimeout = setTimeout(() => this.fitToMarkers(),100)
     console.log(shortid)
   }
 
@@ -137,18 +147,39 @@ const styles = StyleSheet.create({
     marginBottom: -150,
     zIndex: -1
   },
-  displayBox: {
-     height: 80 ,
-     backgroundColor: 'white',
-     shadowColor: 'black',
-     shadowRadius: 20,
-     shadowOpacity: .2,
-     shadowOffset: {width: 0, height: -5},
-   },
    mapContainer: {
      flex: 1,
      backgroundColor: 'rgb(225,225,225)'
-   }
+   },
+   displayBox: {
+      height: 80 ,
+      backgroundColor: 'white',
+      shadowColor: 'black',
+      shadowRadius: 20,
+      shadowOpacity: .2,
+      shadowOffset: {width: 0, height: -5},
+      alignItems: 'flex-start',
+      paddingLeft: 30,
+      paddingTop: 10
+    },
+    trackName: {
+      fontSize: 22,
+      fontWeight: '500',
+      letterSpacing: 0.5
+    },
+    runStats: {
+      marginTop: 4,
+      flexDirection: 'row',
+    },
+    runStartTime: {
+      fontWeight: '300'
+    },
+    runStat: {
+      marginRight: 15,
+      fontSize: 12,
+      fontWeight: '300'
+    }
+
 })
 
 

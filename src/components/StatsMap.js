@@ -43,9 +43,7 @@ class StatsMap extends Component {
   }
 
   componentDidMount(){
-    console.log('!>', this.props.checkpoints)
     this.initialTimeout = setTimeout(() => this.fitToMarkers(this.props.checkpoints), 300)
-    console.log('mounted');
     this.props.registerCallback(this.fitToMarkers)
   }
 
@@ -67,7 +65,6 @@ class StatsMap extends Component {
   }
 
   renderCheckpoints = (checkpoints) => {
-    console.log('!?!?!?',`${this.statsMapView}`)
     return checkpoints.map((checkpoint,idx) => (
       <MapView.Marker
         coordinate={this.getLatLong(checkpoint.latlong)}
