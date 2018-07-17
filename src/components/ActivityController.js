@@ -115,7 +115,10 @@ class ActivityController extends Component {
     const distance = (this.distance/1000).toFixed(2)
     const track_id = this.checkpoints[0].track_id
     const time = this.finalDisplayTime
-    const path = JSON.stringify(this.coordinates)
+    const path = JSON.stringify(
+      this.coordinates
+      // .filter((el,idx)=> idx % 10 === 0)
+    )
     const runData = {
       track_id,
     	distance,
@@ -179,7 +182,7 @@ class ActivityController extends Component {
   }
 
   examineCheckpoints = () => {
-    console.log(this.state.completed)
+    // console.log(this.state.completed)
 
     this.checkpoints = this.checkpoints.map(cp => {
       const distance = getDistance(cp, this.state.location.coords)

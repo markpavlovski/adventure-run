@@ -42,6 +42,7 @@ class Stats extends Component {
       path,
     } = activeRun
 
+
     const completed = checkpoints ? !checkpoints.find(el => !el.checkpoint_time) : false
 
 
@@ -56,12 +57,9 @@ class Stats extends Component {
             <Text style={styles.runStartTime}>{moment(created_at).format("ddd MMM DD, h:mm a")}</Text>
             <View style={styles.runStats}>
               <Text style={styles.runStat}>{time}</Text>
-              <Text style={styles.runStat}>{distance} mi</Text>
+              <Text style={styles.runStat}>{distance} km</Text>
               <Text style={styles.runStat}>{completed ? 'Complete' : 'Incomplete'}</Text>
             </View>
-            {/* <Text>{completed ? 'Completed Full Track' : 'Completed Partial Track'}</Text> */}
-            {/* {checkpoints.sort((a,b)=>a.checkpoint_id - b.checkpoint_id).map((checkpoint,idx) => <Text key={checkpoint.id}>{idx+1} : {checkpoint.checkpoint_time}</Text>)} */}
-
           </View>
         </View>
         <FlatList

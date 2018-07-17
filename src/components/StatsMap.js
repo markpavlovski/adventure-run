@@ -15,13 +15,7 @@ class StatsMap extends Component {
         onRegionChange	= {region => this.setState({region})}
       >
         {this.renderCheckpoints(this.props.checkpoints)}
-        {this.props.path.length
-        ? <MapView.Polyline
-          coordinates={this.props.path}
-          strokeColor="#000"
-          strokeWidth={10}
-        />
-        : null}
+        {this.renderPath(this.props.path)}
       </MapView>
     )
   }
@@ -69,8 +63,19 @@ class StatsMap extends Component {
       <MapView.Marker
         coordinate={this.getLatLong(checkpoint.latlong)}
         key={idx}
+        pinColor={checkpoint.checkpoint_time ? 'blue' : null}
       />
     ))
+  }
+
+  renderPath = (path) => {
+    return (
+      <MapView.Polyline
+        coordinates={path}
+        strokeColor="#000"
+        strokeWidth={5}
+      />
+    )
   }
 
   getLatLong(latlong){

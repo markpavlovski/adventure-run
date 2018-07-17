@@ -24,8 +24,6 @@ class LoginScreen extends Component {
         >
         {this.state.showButtons ? <Image
           style={styles.logo}
-          // source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
-          // source={require('../assets/adventure_run.png')}
           source={require('../assets/simple_logo.png')}
         /> : null }
         {this.state.showButtons ? <Text style={styles.title}>ADVENTURE RUN</Text>: null }
