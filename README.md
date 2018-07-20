@@ -63,20 +63,20 @@ Chose a track, start the timer, and go! You must visit each checkpoint to comple
 
  ## Built With
 
- * [React-Native](https://reactjs.org/) - Frontend library
- * [Redux](https://redux.js.org/) - State container
- * [postgreSQL](https://www.postgresql.org/) - database
- * [Node](https://nodejs.org/en/) - Package ecosystem
- * [Express](https://sockets.io) - Sockets system
+ * [React-Native](https://reactjs.org/) - Frontend Library
+ * [Redux](https://redux.js.org/) - State Management
+ * [postgreSQL](https://www.postgresql.org/) - Database
+ * [Node](https://nodejs.org/en/) - JS Environment
+ * [Express](https://sockets.io) - Node Server Framework
 
 
  ## Contributing
 
- Please send either of the developers a message for details on our code of conduct, and the process for submitting pull requests to us.
+ Please send either of the developers a message for details on our code of conduct, and the process for submitting pull requests.
 
  ## Authors
 
- * **Mark Pavlovski** - *Initial work* - [mrkpvlvski](https://github.com/mrkpvlvski)
+ * **Mark Pavlovski** - *Initial work* - [mrkpvlvski](http://markpavlovski.com)
 
  ## License
 
